@@ -2,7 +2,10 @@ package com.example.mux.security;
 
 import java.io.IOException;
 
+import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.user.model.User;
+import com.example.mux.user.repository.UserRepository;
+import com.example.mux.user.service.JWTManagerService;
 import com.example.mux.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,9 +24,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @AllArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
-
-    private final JwtTokenUtil jwtUtil;
-    private final UserService userService;
+    private final JWTManagerService jwtManagerService;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -37,12 +39,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String token = getAccessToken(request);
 
-        if (!jwtUtil.validateAccessToken(token)) {
+        if (!jwtManagerService.validateJWT(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        setAuthenticationContext(token, request);
+        try {
+            setAuthenticationContext(token, request);
+        } catch (EntityNotFoundException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         filterChain.doFilter(request, response);
     }
 
@@ -61,7 +68,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         return token;
     }
 
-    private void setAuthenticationContext(String token, HttpServletRequest request) {
+    private void setAuthenticationContext(String token, HttpServletRequest request) throws EntityNotFoundException {
         UserDetails userDetails = getUserDetails(token);
 
         UsernamePasswordAuthenticationToken
@@ -73,10 +80,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private UserDetails getUserDetails(String token) {
+    private UserDetails getUserDetails(String token) throws EntityNotFoundException {
 
-        String jwtSubject = jwtUtil.getSubject(token);
-        User userDetails = userService.getUserByEmail(jwtSubject).get();
+        String jwtSubject = jwtManagerService.getSubjectFromToken(token);
+        User userDetails = userRepository.findByEmail(jwtSubject).orElseThrow(() -> new EntityNotFoundException());
 
         return userDetails;
     }

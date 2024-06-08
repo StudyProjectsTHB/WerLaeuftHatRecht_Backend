@@ -1,11 +1,18 @@
 package com.example.mux.user.controller;
 
-import com.example.mux.user.model.User;
+import com.example.mux.user.exception.PasswordMismatchException;
+import com.example.mux.user.exception.TokenExpiredException;
+import com.example.mux.user.exception.TokenNotFoundException;
+import com.example.mux.user.model.dto.*;
+import com.example.mux.user.service.AuthenticationService;
+import com.example.mux.user.service.JWTManagerService;
 import com.example.mux.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,9 +22,47 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
-    @GetMapping()
-    public List<User> getAllUsers(){
-        return userService.getAllUsers();
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody @Valid AuthenticationRequestDTO request) {
+        try {
+            return ResponseEntity.ok().body(authenticationService.authenticateUser(request));
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
+
+    @ResponseBody
+    @PutMapping("register/{token}")
+    public ResponseEntity<UserDTO> registerUserPassword(@RequestBody UserPasswordsDTO userPasswords, @PathVariable String token){
+        try {
+            return ResponseEntity.ok(new UserDTO(authenticationService.registerUser(userPasswords, token)));
+        } catch (TokenNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (TokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (PasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    //TODO add logout
+
+    @ResponseBody
+    @PostMapping
+    public List<UserTokenDTO> createUsers(@RequestBody List<UserCreationDTO> userCreations){
+        return UserTokenDTO.fromUserTokenList(authenticationService.createUsers(userCreations));
+    }
+
+    @GetMapping
+    public List<UserDTO> getUsers(){
+        return UserDTO.fromUserList(userService.getUsers());
+    }
+
+    @DeleteMapping("/{ID}")
+    public void deleteUser(@PathVariable int ID){
+        userService.deleteUser(ID);
+    }
+
 }

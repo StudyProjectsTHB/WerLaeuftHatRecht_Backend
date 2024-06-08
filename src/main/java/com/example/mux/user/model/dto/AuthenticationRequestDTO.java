@@ -1,4 +1,4 @@
-package com.example.mux.authentication.model;
+package com.example.mux.user.model.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AuthenticationRequest {
+public class AuthenticationRequestDTO {
     @NotNull
     private String email;
 

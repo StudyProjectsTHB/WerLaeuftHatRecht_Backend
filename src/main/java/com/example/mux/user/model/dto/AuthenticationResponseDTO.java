@@ -1,4 +1,4 @@
-package com.example.mux.authentication.model;
+package com.example.mux.user.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class AuthenticationResponseDTO {
     private String accessToken;
 }

@@ -1,5 +1,7 @@
 package com.example.mux.user.model;
 
+import com.example.mux.day.model.Day;
+import com.example.mux.group.model.Group;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,7 +25,7 @@ import java.util.Collections;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer ID;
 
     @Email
     @Column(nullable = false, unique = true)
@@ -35,16 +38,20 @@ public class User implements UserDetails {
     private boolean isAdmin;
 
     @Column(nullable = true)
-    private String token;
-
-    @Column(nullable = true)
     private String noun;
 
     @Column(nullable = true)
     private String adjective;
 
+    @OneToMany(mappedBy = "user")
+    private List<Day> days;
 
-    public User(String email){
+    @ManyToOne
+    @JoinColumn(name = "group_ID")
+    private Group group;
+
+    public User(String email, boolean isAdmin){
+        this.isAdmin = isAdmin;
         this.email = email;
     }
 
@@ -85,7 +92,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return token == null;
+        return password != null;
     }
 
 }
