@@ -4,6 +4,7 @@ import com.example.mux.day.model.dto.DayDTO;
 import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.model.dto.DurationStepsDTO;
 import com.example.mux.day.service.DayService;
+import com.example.mux.exception.CompetitionNotStartedException;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.user.service.UserService;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,8 @@ public class DayController {
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }catch (CompetitionNotStartedException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
@@ -42,6 +45,8 @@ public class DayController {
             return ResponseEntity.ok(day);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }catch (CompetitionNotStartedException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
@@ -55,6 +60,8 @@ public class DayController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (NullPointerException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (CompetitionNotStartedException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 

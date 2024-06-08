@@ -35,7 +35,15 @@ public class GroupService {
         return groupRepository.findByID(ID).orElseThrow(()->new EntityNotFoundException("There is no group with this ID."));
     }
 
+    public Group getGroup(String name)throws EntityNotFoundException {
+        return groupRepository.findByName(name).orElseThrow(()->new EntityNotFoundException("There is no group with this name."));
+    }
+
     public List<Group> getGroups(){
         return groupRepository.findAll();
+    }
+
+    public boolean groupExists(String name){
+        return groupRepository.existsByName(name);
     }
 }

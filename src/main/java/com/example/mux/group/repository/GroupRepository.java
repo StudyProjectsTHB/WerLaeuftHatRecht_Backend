@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Integer> {
     void deleteById(Integer ID);
-
+    boolean existsByName(String name);
+    Optional<Group> findByName(String name);
     Optional<Group> findByID(int ID);
 }

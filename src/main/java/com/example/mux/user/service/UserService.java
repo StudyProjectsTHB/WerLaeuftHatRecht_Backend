@@ -26,7 +26,6 @@ import java.util.*;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserTokenService userTokenService;
 
     public User getUser(String email) throws EntityNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User with this email not found."));
@@ -42,5 +41,9 @@ public class UserService {
 
     public void deleteUser(int ID) {
         userRepository.deleteById(ID);
+    }
+
+    public boolean userExists(String email){
+        return userRepository.existsByEmail(email);
     }
 }

@@ -10,5 +10,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class GroupCreationDTO {
-    String name;
+    private String name;
 }
