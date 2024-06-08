@@ -1,6 +1,8 @@
 package com.example.mux.user.service;
 
 import com.example.mux.exception.EntityNotFoundException;
+import com.example.mux.group.model.Group;
+import com.example.mux.group.service.GroupService;
 import com.example.mux.user.exception.PasswordMismatchException;
 import com.example.mux.user.exception.TokenExpiredException;
 import com.example.mux.user.exception.TokenNotFoundException;
@@ -29,6 +31,7 @@ public class AuthenticationService {
     private final JWTManagerService jwtManagerService;
     private final UserTokenService userTokenService;
     private final UserRepository userRepository;
+    private final GroupService groupService;
 
     public AuthenticationResponseDTO authenticateUser(AuthenticationRequestDTO request) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -65,20 +68,25 @@ public class AuthenticationService {
         }
     }
 
-    public List<UserToken> createUsers(List<UserCreationDTO> userCreations) {
+    public List<UserToken> createUsers(List<UserCreationDTO> userCreations) throws EntityNotFoundException {
         List<User> users = new LinkedList<>();
         List<UserToken> userTokens = new LinkedList<>();
 
-        userCreations.forEach(userCreation -> {
+        for(UserCreationDTO userCreation: userCreations){
             User user = new User(userCreation.getEmail(), userCreation.isAdmin());
             user.setAdjective("kleiner");
-            //TODO add Group from group id
+            try {
+                Group group = groupService.getGroup(userCreation.getGroupId());
+                user.setGroup(group);
+            } catch (EntityNotFoundException e) {
+                throw new EntityNotFoundException("Group with given id does not exists.");
+            }
             user.setNoun("Iltis");//TODO set random noun and adjective
             users.add(user);
 
             userTokens.add(userTokenService.buildUserToken(user));
 
-        });
+        }
 
         userRepository.saveAll(users);
         userTokenService.saveUserTokens(userTokens);//TODO send emails to all users

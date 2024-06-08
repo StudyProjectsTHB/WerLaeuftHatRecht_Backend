@@ -1,8 +1,7 @@
 package com.example.mux.day.controller;
 
-import com.example.mux.day.model.Day;
 import com.example.mux.day.model.dto.DayDTO;
-import com.example.mux.day.model.dto.DayStepsDTO;
+import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.model.dto.DurationStepsDTO;
 import com.example.mux.day.service.DayService;
 import com.example.mux.exception.EntityNotFoundException;
@@ -37,7 +36,7 @@ public class DayController {
 
     @PutMapping("/{date}")
     @ResponseBody
-    public ResponseEntity<DayDTO> updateDay(@PathVariable LocalDate date, @RequestBody DayStepsDTO daySteps, @AuthenticationPrincipal UserDetails userDetail) {
+    public ResponseEntity<DayDTO> updateDay(@PathVariable LocalDate date, @RequestBody StepsDTO daySteps, @AuthenticationPrincipal UserDetails userDetail) {
         try {
             DayDTO day = new DayDTO(dayService.updateDay(date, userService.getUser(userDetail.getUsername()), daySteps));
             return ResponseEntity.ok(day);

@@ -1,9 +1,10 @@
 package com.example.mux.day.service;
 
 import com.example.mux.day.model.Day;
-import com.example.mux.day.model.dto.DayStepsDTO;
+import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.model.dto.DurationStepsDTO;
 import com.example.mux.day.repository.DayRepository;
+import com.example.mux.group.model.Group;
 import com.example.mux.user.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class DayService {
         dayRepository.deleteByDateAndUser(date, user);//TODO check if competition started
     }
 
-    public Day updateDay(LocalDate date, User user, DayStepsDTO daySteps) throws EntityNotFoundException{//TODO check if competition started
+    public Day updateDay(LocalDate date, User user, StepsDTO daySteps) throws EntityNotFoundException{//TODO check if competition started
         Day day = dayRepository.findByDateAndUser(date, user).orElseThrow(() -> new EntityNotFoundException("Day for this date and user does not exist."));
         day.setSteps(daySteps.getSteps());
         return dayRepository.save(day);
@@ -34,6 +35,10 @@ public class DayService {
 
     public List<Day> getDays(User user){
         return dayRepository.findAllByUser(user);//TODO check if competition started
+    }
+
+    public List<Day> getDays(){
+        return dayRepository.findAll();
     }
 
     public List<Day> addDays(User user, DurationStepsDTO durationSteps) throws NullPointerException{//TODO check if competition started
@@ -62,6 +67,7 @@ public class DayService {
 
             if(dayOptional.isPresent()){
                 day = dayOptional.get();
+                day.setSteps(day.getSteps() + steps);
             }else{
                 day = new Day(date, steps, user);
             }
@@ -69,5 +75,45 @@ public class DayService {
             days.add(day);
         }
         return dayRepository.saveAll(days);
+    }
+
+    public List<Day> getDaysBetween(User user, LocalDate startDate, LocalDate endDate){
+        List<Day> resultDays = null;
+        if(startDate == null && endDate == null){
+            resultDays = dayRepository.findAllByUser(user);
+        }else if(startDate != null){
+            resultDays = dayRepository.findAllByUserAndDateGreaterThanEqual(user, startDate);
+        }else if(endDate != null){
+            resultDays = dayRepository.findAllByUserAndDateLessThanEqual(user, endDate);
+        }else{
+            resultDays = dayRepository.findAllByUserAndDateBetween(user, startDate, endDate);
+        }
+        return resultDays;
+    }
+
+    public List<Day> getDaysBetween(Group group, LocalDate startDate, LocalDate endDate){
+        List<Day> resultDays = null;
+        if(startDate == null && endDate == null){
+            resultDays = dayRepository.findAllByUser_Group(group);
+        }else if(startDate != null){
+            resultDays = dayRepository.findAllByUser_GroupAndDateGreaterThanEqual(group, startDate);
+        }else if(endDate != null){
+            resultDays = dayRepository.findAllByUser_GroupAndDateLessThanEqual(group, endDate);
+        }else{
+            resultDays = dayRepository.findAllByUser_GroupAndDateBetween(group, startDate, endDate);
+        }
+        return resultDays;
+    }
+
+    public int getStepSum(List<Day> days){
+        if(days == null){
+            return 0;
+        }else{
+            int result = 0;
+            for(Day day : days){
+                result += day.getSteps();
+            }
+            return result;
+        }
     }
 }

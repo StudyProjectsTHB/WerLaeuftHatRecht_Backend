@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DayStepsDTO {
+public class StepsDTO {
     private int steps;
 }

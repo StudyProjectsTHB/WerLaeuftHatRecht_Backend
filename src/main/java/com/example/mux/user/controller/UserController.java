@@ -1,5 +1,6 @@
 package com.example.mux.user.controller;
 
+import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.user.exception.PasswordMismatchException;
 import com.example.mux.user.exception.TokenExpiredException;
 import com.example.mux.user.exception.TokenNotFoundException;
@@ -52,8 +53,12 @@ public class UserController {
 
     @ResponseBody
     @PostMapping
-    public List<UserTokenDTO> createUsers(@RequestBody List<UserCreationDTO> userCreations){
-        return UserTokenDTO.fromUserTokenList(authenticationService.createUsers(userCreations));
+    public ResponseEntity<List<UserTokenDTO>> createUsers(@RequestBody List<UserCreationDTO> userCreations){
+        try {
+            return ResponseEntity.ok(UserTokenDTO.fromUserTokenList(authenticationService.createUsers(userCreations)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping
