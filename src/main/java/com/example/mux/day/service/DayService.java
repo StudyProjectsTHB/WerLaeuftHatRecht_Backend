@@ -32,7 +32,6 @@ public class DayService {
         } else {
             throw new CompetitionNotStartedException();
         }
-        //TODO check if competition started
     }
 
     public Day updateDay(LocalDate date, User user, StepsDTO daySteps) throws EntityNotFoundException, CompetitionNotStartedException {
