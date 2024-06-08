@@ -25,9 +25,6 @@ public class Group {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "group")
-    private List<User> users;
-
     public Group(String name){
         this(0, name);
     }
@@ -35,6 +32,5 @@ public class Group {
     public Group(int ID, String name){
         setID(ID);
         setName(name);
-        setUsers(new LinkedList<>());
     }
 }

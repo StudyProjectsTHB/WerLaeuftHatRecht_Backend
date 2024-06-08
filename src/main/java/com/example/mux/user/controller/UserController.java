@@ -37,7 +37,8 @@ public class UserController {
     @PutMapping("register/{token}")
     public ResponseEntity<UserDTO> registerUserPassword(@RequestBody UserPasswordsDTO userPasswords, @PathVariable String token){
         try {
-            return ResponseEntity.ok(new UserDTO(authenticationService.registerUser(userPasswords, token)));
+            UserDTO userDTO = new UserDTO(authenticationService.registerUser(userPasswords, token));
+            return ResponseEntity.ok(userDTO);
         } catch (TokenNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (TokenExpiredException e) {
@@ -57,7 +58,8 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> getUsers(){
-        return UserDTO.fromUserList(userService.getUsers());
+        List<UserDTO> users = UserDTO.fromUserList(userService.getUsers());;
+        return users;
     }
 
     @DeleteMapping("/{ID}")

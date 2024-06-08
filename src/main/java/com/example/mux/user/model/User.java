@@ -43,9 +43,6 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String adjective;
 
-    @OneToMany(mappedBy = "user")
-    private List<Day> days;
-
     @ManyToOne
     @JoinColumn(name = "group_ID")
     private Group group;

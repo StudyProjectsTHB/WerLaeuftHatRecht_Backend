@@ -27,8 +27,9 @@ public class Day {
     @JoinColumn(name = "user_ID")
     private User user;
 
-    public Day(LocalDate date, int steps){
+    public Day(LocalDate date, int steps, User user){
         setDate(date);
         setSteps(steps);
+        setUser(user);
     }
 }

@@ -18,7 +18,6 @@ public class UserDTO {
     private boolean isAdmin;
     private String noun;
     private String adjective;
-    private List<Day> days;
     private Group group;
     private int ID;
 
@@ -26,7 +25,6 @@ public class UserDTO {
         setEmail(user.getEmail());
         setNoun(user.getNoun());
         setAdjective(user.getAdjective());
-        setDays(user.getDays());
         setGroup(user.getGroup());
         this.isAdmin = user.isAdmin();
         setID(user.getID());

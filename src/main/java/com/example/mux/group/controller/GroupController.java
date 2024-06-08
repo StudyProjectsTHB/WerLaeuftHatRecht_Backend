@@ -1,4 +1,4 @@
-package com.example.mux.group;
+package com.example.mux.group.controller;
 
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
