@@ -35,7 +35,8 @@ public class ApplicationSecurity {
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/logout").hasAnyRole("ADMIN", "USER")
 
-                        .requestMatchers("/groups/**").hasRole("ADMIN")
+                        .requestMatchers("/groups/*").hasRole("ADMIN")
+                        .requestMatchers("/groups/*/users").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/groups").hasRole("ADMIN")
 
                         .requestMatchers("/days").hasAnyRole("USER", "ADMIN")

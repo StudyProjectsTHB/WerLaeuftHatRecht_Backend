@@ -1,25 +1,12 @@
 package com.example.mux.user.service;
 
 import com.example.mux.exception.EntityNotFoundException;
-import com.example.mux.user.UserProperties;
-import com.example.mux.user.exception.PasswordMismatchException;
-import com.example.mux.user.exception.TokenExpiredException;
-import com.example.mux.user.exception.TokenNotFoundException;
+import com.example.mux.group.model.Group;
 import com.example.mux.user.model.User;
-import com.example.mux.user.model.dto.AuthenticationRequestDTO;
-import com.example.mux.user.model.dto.AuthenticationResponseDTO;
-import com.example.mux.user.model.dto.UserCreationDTO;
-import com.example.mux.user.model.dto.UserPasswordsDTO;
-import com.example.mux.user.model.UserToken;
-import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import com.example.mux.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -45,5 +32,18 @@ public class UserService {
 
     public boolean userExists(String email){
         return userRepository.existsByEmail(email);
+    }
+
+    public List<User> getUsers(Group group){
+        return userRepository.findAllByGroup(group);
+    }
+
+    public User createAndRegisterIfNotExist(User user){
+        Optional<User> userOptional = userRepository.getUserByEmail(user.getEmail());
+        if(userOptional.isPresent()){
+            return userOptional.get();
+        }else{
+            return userRepository.save(user);
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.group.model.dto.GroupCreationDTO;
 import com.example.mux.group.service.GroupService;
+import com.example.mux.user.model.User;
 import com.example.mux.user.model.UserToken;
 import com.example.mux.user.model.dto.UserCreationDTO;
 import com.example.mux.user.service.AuthenticationService;
@@ -40,6 +41,28 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
             System.out.println(userToken.getToken());
         }
 
+        createTestData();
+
+    }
+
+    private void createTestData(){
+
+        Group group1 = groupService.createIfNotExist(new Group("OLG Brandenburg"));
+        Group group2 = groupService.createIfNotExist(new Group("AG Potsdam"));
+        User user1 = new User("admin@admin.de", true);
+        user1.setPassword("admin");
+        user1.setGroup(group1);
+        User user2 = new User("user@user.de", false);
+        user2.setPassword("user");
+        user2.setGroup(group1);
+
+        User user3 = new User("user2@user2.de", false);
+        user3.setPassword("user2");
+        user3.setGroup(group2);
+
+        userService.createAndRegisterIfNotExist(user1);
+        userService.createAndRegisterIfNotExist(user2);
+        userService.createAndRegisterIfNotExist(user3);
 
     }
 }
