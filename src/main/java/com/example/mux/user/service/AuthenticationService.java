@@ -32,6 +32,7 @@ public class AuthenticationService {
     private final UserTokenService userTokenService;
     private final UserRepository userRepository;
     private final GroupService groupService;
+    private final EmailService emailService;
 
     public AuthenticationResponseDTO authenticateUser(AuthenticationRequestDTO request) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -90,7 +91,8 @@ public class AuthenticationService {
 
         userRepository.saveAll(users);
         userTokenService.saveUserTokens(userTokens);//TODO send emails to all users
-
+        System.out.println("Sending mail");
+        //emailService.sendEmail("vaxer30212@morxin.com", "Testemal", "Nachricht");
         return userTokens;
     }
 }
