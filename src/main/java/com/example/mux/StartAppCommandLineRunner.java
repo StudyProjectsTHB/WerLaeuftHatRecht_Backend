@@ -40,6 +40,5 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
             System.out.println(userToken.getToken());
         }
 
-
     }
 }

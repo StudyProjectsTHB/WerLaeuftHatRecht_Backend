@@ -1,4 +1,4 @@
-package com.example.mux.statistic;
+package com.example.mux.statistic.controller;
 
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.statistic.model.dto.GroupStepsDTO;
