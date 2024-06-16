@@ -41,7 +41,7 @@ public class AuthenticationService {
 
         User user = (User) authentication.getPrincipal();
         String accessToken = jwtManagerService.generateJWT(user);
-        AuthenticationResponseDTO response = new AuthenticationResponseDTO(accessToken);
+        AuthenticationResponseDTO response = new AuthenticationResponseDTO(accessToken, user);
 
         return response;
     }

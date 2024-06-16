@@ -1,7 +1,6 @@
 package com.example.mux.statistic.service;
 
 import com.example.mux.day.model.Day;
-import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.service.DayService;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
@@ -36,11 +35,25 @@ public class StatisticService {
     }
 
     public List<UserStepsDTO> createUserStatistics(StatisticDurationDTO statisticDuration){
+        return createUserStatisticsForUsers(userService.getUsers(), statisticDuration);
+    }
+
+    public List<UserStepsDTO> createGroupUserStatistic(Group group, StatisticDurationDTO statisticDuration){
+        List<User> users = userService.getUsers(group);
+        return createUserStatisticsForUsers(users, statisticDuration);
+    }
+
+    private List<UserStepsDTO> createUserStatisticsForUsers(List<User> users, StatisticDurationDTO statisticDuration){
         List<UserStepsDTO> userSteps = new LinkedList<>();
-        for(User user: userService.getUsers()){
+        for(User user: users){
             userSteps.add(createUserStatistic(user, statisticDuration));
         }
         return userSteps;
+    }
+
+    public List<UserStepsDTO> createGroupUserStatistic(int groupID, StatisticDurationDTO statisticDurationDTO) throws EntityNotFoundException {
+        Group group = groupService.getGroup(groupID);
+        return createGroupUserStatistic(group, statisticDurationDTO);
     }
 
     public GroupStepsDTO createGroupStatistic(int groupID, StatisticDurationDTO statisticDuration) throws EntityNotFoundException {

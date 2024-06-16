@@ -44,6 +44,16 @@ public class StatisticController {
         }
     }
 
+    @GetMapping("/groups/{ID}/users")
+    @ResponseBody
+    public ResponseEntity<List<UserStepsDTO>> createGroupUserStatistic(@PathVariable int ID, @RequestBody StatisticDurationDTO statisticDuration){
+        try {
+            return ResponseEntity.ok(statisticService.createGroupUserStatistic(ID, statisticDuration));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @GetMapping("/groups")
     @ResponseBody
     public List<GroupStepsDTO> createGroupStatistics(@RequestBody StatisticDurationDTO statisticDuration){

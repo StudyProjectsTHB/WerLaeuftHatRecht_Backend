@@ -4,11 +4,13 @@ import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.group.model.dto.GroupCreationDTO;
 import com.example.mux.group.repository.GroupRepository;
+import com.example.mux.user.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -45,5 +47,14 @@ public class GroupService {
 
     public boolean groupExists(String name){
         return groupRepository.existsByName(name);
+    }
+
+    public Group createIfNotExist(Group group){
+        Optional<Group> groupOptional = groupRepository.findByName(group.getName());
+        if(groupOptional.isPresent()){
+            return groupOptional.get();
+        }else{
+            return groupRepository.save(group);
+        }
     }
 }
