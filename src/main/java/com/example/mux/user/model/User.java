@@ -90,7 +90,6 @@ public class User implements UserDetails {
         return password != null;
     }
 
-
     public String getCompetitionUserName(){
         return adjective + " " + noun;
     }
