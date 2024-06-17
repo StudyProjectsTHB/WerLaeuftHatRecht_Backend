@@ -1,6 +1,5 @@
 package com.example.mux.user.model;
 
-import com.example.mux.day.model.Day;
 import com.example.mux.group.model.Group;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Entity
 @Getter
@@ -90,6 +88,11 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return password != null;
+    }
+
+
+    public String getCompetitionUserName(){
+        return adjective + " " + noun;
     }
 
 }

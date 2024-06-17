@@ -82,7 +82,7 @@ public class AuthenticationService {
             } catch (EntityNotFoundException e) {
                 throw new EntityNotFoundException("Group with given id does not exists.");
             }
-            user.setNoun("Iltis");//TODO set random noun and adjective
+            user.setNoun("Iltis"); //TODO set random noun and adjective
             users.add(user);
 
             userTokens.add(userTokenService.buildUserToken(user));
@@ -90,9 +90,11 @@ public class AuthenticationService {
         }
 
         userRepository.saveAll(users);
-        userTokenService.saveUserTokens(userTokens);//TODO send emails to all users
-        System.out.println("Sending mail");
-        //emailService.sendEmail("vaxer30212@morxin.com", "Testemal", "Nachricht");
+        userTokenService.saveUserTokens(userTokens);
+        System.out.println("Sending mails");
+        emailService.sendWelcomeEmails(users, userTokens);
+        System.out.println("Sent");
+
         return userTokens;
     }
 }
