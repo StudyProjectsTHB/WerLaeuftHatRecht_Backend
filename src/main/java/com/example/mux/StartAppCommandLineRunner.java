@@ -72,7 +72,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
 
     private void generateUserNames(){
         final List<String> adjectives = Arrays.asList("schneller", "schöner", "perfekter", "attraktiver", "fleißiger", "eifriger", "herzlicher", "glücklicher", "lieber", "lustiger", "selbstbewusster", "sympathischer", "starker", "stolzer", "toller", "überragender", "vorbildlicher", "wendiger", "zauberhafter");
-        final List<String> nouns = Arrays.asList("Löwe", "Pinguin", "Elch", "Hase", "Igel", "Tiger", "Wolf");
+        final List<String> nouns = Arrays.asList("Löwe", "Pinguin", "Elch", "Bär");
         AvailableNameService.generateAvailableNames(adjectives, nouns);
     }
 }
