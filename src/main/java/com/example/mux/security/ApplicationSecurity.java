@@ -47,6 +47,8 @@ public class ApplicationSecurity {
                         .requestMatchers("/statistics/groups/**").hasRole("ADMIN")
                         .requestMatchers("/statistics/groups").hasRole("ADMIN")
 
+                        .requestMatchers("/challenges/**").hasAnyRole("USER", "ADMIN")
+
                         .requestMatchers("/competition").hasRole("ADMIN")
                         .anyRequest().permitAll()/*.authenticated()*/)
                 .csrf(csrf -> csrf.disable())

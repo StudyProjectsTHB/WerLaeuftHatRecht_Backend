@@ -93,9 +93,7 @@ public class AuthenticationService {
 
         userRepository.saveAll(users);
         userTokenService.saveUserTokens(userTokens);
-        System.out.println("Sending mails");
         emailService.sendWelcomeEmails(users, userTokens);
-        System.out.println("Sent");
 
         return userTokens;
     }

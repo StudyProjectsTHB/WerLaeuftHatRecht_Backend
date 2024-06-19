@@ -1,6 +1,5 @@
 package com.example.mux.challenge.model;
 
-import com.example.mux.user.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +27,7 @@ public class Challenge {
 
     private LocalDate endDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_type_ID")
     private ChallengeType challengeType;
 

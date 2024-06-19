@@ -1,14 +1,16 @@
 package com.example.mux.day.service;
 
+import com.example.mux.competition.model.Competition;
 import com.example.mux.competition.service.CompetitionService;
 import com.example.mux.day.model.Day;
 import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.model.dto.DurationStepsDTO;
 import com.example.mux.day.repository.DayRepository;
 import com.example.mux.exception.CompetitionNotStartedException;
+import com.example.mux.exception.DaysNotInCompetitionException;
+import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.user.model.User;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +54,7 @@ public class DayService {
         return dayRepository.findAll();
     }
 
-    public List<Day> addDays(User user, DurationStepsDTO durationSteps) throws NullPointerException, CompetitionNotStartedException {
+    public List<Day> addDays(User user, DurationStepsDTO durationSteps) throws NullPointerException, CompetitionNotStartedException, EntityNotFoundException, DaysNotInCompetitionException {
         if (!competitionService.competitionExists()) {
             throw new CompetitionNotStartedException();
         }
@@ -64,7 +66,15 @@ public class DayService {
 
         LocalDate startDate = durationSteps.getStartDate() != null ? durationSteps.getStartDate() : durationSteps.getEndDate();
         LocalDate endDate = durationSteps.getEndDate() != null ? durationSteps.getEndDate() : durationSteps.getStartDate();
-
+        if (endDate.isAfter(competitionService.getCompetition().getEndDate())) {
+            endDate = competitionService.getCompetition().getEndDate();
+        }
+        if (startDate.isBefore(competitionService.getCompetition().getStartDate())) {
+            startDate = competitionService.getCompetition().getStartDate();
+        }
+        if (startDate.isAfter(endDate)) {
+            throw new DaysNotInCompetitionException();
+        }
         long daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1;
 
         int stepNumberPerDay = (int) (durationSteps.getSteps() / (double) daysBetween);

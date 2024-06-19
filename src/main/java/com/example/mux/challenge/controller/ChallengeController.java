@@ -21,8 +21,6 @@ import java.util.List;
 @RequestMapping("/challenges")
 @AllArgsConstructor
 public class ChallengeController {
-    // TODO: Create some ChallengeTypes and Challenges in CommandLineStarter
-    // TODO: Every User being created (also the first ones) must get Challenges --> Optimization: Remove User <-> Challenge Connection?
 
     private final ChallengeService challengeService;
     private final UserService userService;

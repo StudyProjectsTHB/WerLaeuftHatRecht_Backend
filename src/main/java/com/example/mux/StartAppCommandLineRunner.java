@@ -12,6 +12,7 @@ import com.example.mux.user.service.AuthenticationService;
 import com.example.mux.user.service.AvailableNameService;
 import com.example.mux.user.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -70,6 +71,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
 
     }
 
+    @SneakyThrows
     private void generateUserNames(){
         final List<String> adjectives = Arrays.asList("schneller", "schöner", "perfekter", "attraktiver", "fleißiger", "eifriger", "herzlicher", "glücklicher", "lieber", "lustiger", "selbstbewusster", "sympathischer", "starker", "stolzer", "toller", "überragender", "vorbildlicher", "wendiger", "zauberhafter");
         final List<String> nouns = Arrays.asList("Löwe", "Pinguin", "Elch", "Bär", "Affe", "Fuchs", "Luchs");

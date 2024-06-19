@@ -25,7 +25,7 @@ public class UserChallengeDTO {
     private User user;
 
     public UserChallengeDTO(Challenge challenge, User user) {
-        String challengeString = Stream.of(challenge.getChallengeType().getPrefix(), Integer.toString(challenge.getTime()), challenge.getChallengeType().getTimeUnity(), Integer.toString(challenge.getAmount()), challenge.getChallengeType().getAmountUnity())
+        String challengeString = Stream.of(challenge.getChallengeType().getPrefix(), Integer.toString(challenge.getTime()), challenge.getChallengeType().getTimeUnit(), Integer.toString(challenge.getAmount()), challenge.getChallengeType().getAmountUnit())
                 .filter(s -> s != null && !s.isEmpty() && !s.equals("0"))
                 .collect(Collectors.joining(" "));
 
@@ -78,7 +78,7 @@ public class UserChallengeDTO {
                 currentDone += day.getSteps();
             }
         }
-        String progressString = currentDone + "/" + goal + " " + challenge.getChallengeType().getPrimaryUnity();
+        String progressString = currentDone + "/" + goal + " " + challenge.getChallengeType().getPrimaryUnit();
 
         this.setChallengeString(challengeString);
         this.setProgressString(progressString);
