@@ -1,5 +1,6 @@
 package com.example.mux.user.model;
 
+import com.example.mux.challenge.model.Challenge;
 import com.example.mux.day.model.Day;
 import com.example.mux.group.model.Group;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -46,6 +47,9 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "group_ID")
     private Group group;
+
+    @OneToMany
+    private Set<Day> days;
 
     public User(String email, boolean isAdmin){
         this.isAdmin = isAdmin;
@@ -90,6 +94,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return password != null;
+    }
+
+    public String getCompetitionUserName(){
+        return adjective + " " + noun;
     }
 
 }

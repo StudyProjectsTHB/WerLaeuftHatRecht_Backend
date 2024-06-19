@@ -14,6 +14,7 @@ import com.example.mux.user.model.dto.UserCreationDTO;
 import com.example.mux.user.model.dto.UserPasswordsDTO;
 import com.example.mux.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,9 +43,8 @@ public class AuthenticationService {
 
         User user = (User) authentication.getPrincipal();
         String accessToken = jwtManagerService.generateJWT(user);
-        AuthenticationResponseDTO response = new AuthenticationResponseDTO(accessToken, user);
 
-        return response;
+        return new AuthenticationResponseDTO(accessToken, user);
     }
 
     public User registerUser(UserPasswordsDTO userPasswords, String token) throws TokenNotFoundException, TokenExpiredException, PasswordMismatchException {
@@ -75,24 +75,26 @@ public class AuthenticationService {
 
         for(UserCreationDTO userCreation: userCreations){
             User user = new User(userCreation.getEmail(), userCreation.isAdmin());
-            user.setAdjective("kleiner");
             try {
                 Group group = groupService.getGroup(userCreation.getGroupId());
                 user.setGroup(group);
             } catch (EntityNotFoundException e) {
                 throw new EntityNotFoundException("Group with given id does not exists.");
             }
-            user.setNoun("Iltis");//TODO set random noun and adjective
+            Pair<String, String> competitionName = AvailableNameService.getAvailableName();
+            user.setAdjective(competitionName.getFirst());
+            user.setNoun(competitionName.getSecond());
             users.add(user);
+            System.out.println("Generated Name: " + competitionName.getFirst() + " " + competitionName.getSecond());
 
             userTokens.add(userTokenService.buildUserToken(user));
 
         }
 
         userRepository.saveAll(users);
-        userTokenService.saveUserTokens(userTokens);//TODO send emails to all users
-        System.out.println("Sending mail");
-        //emailService.sendEmail("vaxer30212@morxin.com", "Testemal", "Nachricht");
+        userTokenService.saveUserTokens(userTokens);
+        emailService.sendWelcomeEmails(users, userTokens);
+
         return userTokens;
     }
 }

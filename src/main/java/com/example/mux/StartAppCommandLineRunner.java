@@ -9,12 +9,17 @@ import com.example.mux.user.model.User;
 import com.example.mux.user.model.UserToken;
 import com.example.mux.user.model.dto.UserCreationDTO;
 import com.example.mux.user.service.AuthenticationService;
+import com.example.mux.user.service.AvailableNameService;
 import com.example.mux.user.service.UserService;
+import com.example.mux.weather.controller.WeatherController;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -28,8 +33,9 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         competitionService.createInitialCompetition();
+        generateUserNames();
 
-        Group group = null;
+        Group group;
         try {
             group = groupService.getGroup(initProperties.getGroupName());
         }catch (EntityNotFoundException e){
@@ -64,5 +70,15 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
         userService.createAndRegisterIfNotExist(user2);
         userService.createAndRegisterIfNotExist(user3);
 
+    }
+
+    @SneakyThrows
+    private void generateUserNames(){
+        final List<String> adjectives = Arrays.asList("schneller", "schöner", "perfekter", "attraktiver", "fleißiger", "eifriger", "herzlicher", "glücklicher", "lieber", "lustiger", "selbstbewusster", "sympathischer", "starker", "stolzer", "toller", "überragender", "vorbildlicher", "wendiger", "zauberhafter");
+        final List<String> nouns = Arrays.asList("Löwe", "Pinguin", "Elch", "Bär", "Affe", "Fuchs", "Luchs");
+        AvailableNameService.generateAvailableNames(adjectives, nouns);
+
+        WeatherController w = new WeatherController();
+        w.getWeather();
     }
 }
