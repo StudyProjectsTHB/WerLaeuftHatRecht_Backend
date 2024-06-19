@@ -29,11 +29,16 @@ public class Challenge {
 
     private LocalDate endDate;
 
-    @ManyToMany
-    Set<User> users;
-
     @ManyToOne
     @JoinColumn(name = "challenge_type_ID")
     private ChallengeType challengeType;
+
+    public Challenge(int time, int amount, LocalDate startDate, LocalDate endDate, ChallengeType challengeType) {
+        this.time = time;
+        this.amount = amount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.challengeType = challengeType;
+    }
 
 }

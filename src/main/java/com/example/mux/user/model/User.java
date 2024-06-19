@@ -51,9 +51,6 @@ public class User implements UserDetails {
     @OneToMany
     private Set<Day> days;
 
-    @ManyToMany
-    Set<Challenge> challenges;
-
     public User(String email, boolean isAdmin){
         this.isAdmin = isAdmin;
         this.email = email;

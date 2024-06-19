@@ -75,7 +75,6 @@ public class AuthenticationService {
 
         for(UserCreationDTO userCreation: userCreations){
             User user = new User(userCreation.getEmail(), userCreation.isAdmin());
-            user.setAdjective("kleiner");
             try {
                 Group group = groupService.getGroup(userCreation.getGroupId());
                 user.setGroup(group);

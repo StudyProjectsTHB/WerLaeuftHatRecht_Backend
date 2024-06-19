@@ -20,11 +20,19 @@ public class ChallengeType {
 
     private String prefix;
 
-    private String timeUnity;
+    private String timeUnit;
 
-    private String amountUnity;
+    private String amountUnit;
 
-    private String primaryUnity;
+    private String primaryUnit;
 
     private ChallengeTypeEnum type;
+
+    public ChallengeType(String prefix, String timeUnit, String amountUnit, String primaryUnit, ChallengeTypeEnum type){
+        this.prefix = prefix;
+        this.timeUnit = timeUnit;
+        this.amountUnit = amountUnit;
+        this.primaryUnit = primaryUnit;
+        this.type = type;
+    }
 }
