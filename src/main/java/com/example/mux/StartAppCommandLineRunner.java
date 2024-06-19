@@ -11,6 +11,7 @@ import com.example.mux.user.model.dto.UserCreationDTO;
 import com.example.mux.user.service.AuthenticationService;
 import com.example.mux.user.service.AvailableNameService;
 import com.example.mux.user.service.UserService;
+import com.example.mux.weather.controller.WeatherController;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.boot.CommandLineRunner;
@@ -76,5 +77,8 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
         final List<String> adjectives = Arrays.asList("schneller", "schöner", "perfekter", "attraktiver", "fleißiger", "eifriger", "herzlicher", "glücklicher", "lieber", "lustiger", "selbstbewusster", "sympathischer", "starker", "stolzer", "toller", "überragender", "vorbildlicher", "wendiger", "zauberhafter");
         final List<String> nouns = Arrays.asList("Löwe", "Pinguin", "Elch", "Bär", "Affe", "Fuchs", "Luchs");
         AvailableNameService.generateAvailableNames(adjectives, nouns);
+
+        WeatherController w = new WeatherController();
+        w.getWeather();
     }
 }
