@@ -72,4 +72,14 @@ public class UserController {
         userService.deleteUser(ID);
     }
 
+    @PutMapping("/{ID}")
+    @ResponseBody
+    public ResponseEntity<UserDTO> updateUserStepGoal(@PathVariable int ID, @RequestBody UpdateUserStepGoalDTO updateUserStepGoal){
+        try {
+            return ResponseEntity.ok(userService.updateUserStepGoal(ID, updateUserStepGoal));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }
