@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GroupCreationDTO {
     private String name;
+    private int numberOfEmployees;
 }

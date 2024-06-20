@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserStepsDTO {
+public class UserStepsDTO implements Comparable<UserStepsDTO>{
     private String noun;
     private String adjective;
     int steps;
@@ -19,5 +19,10 @@ public class UserStepsDTO {
         setSteps(steps);
         setNoun(user.getNoun());
         setAdjective(user.getAdjective());
+    }
+
+    @Override
+    public int compareTo(UserStepsDTO o) {
+        return Integer.compare(o.getSteps(), this.steps);
     }
 }

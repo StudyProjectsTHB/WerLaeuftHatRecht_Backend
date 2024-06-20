@@ -5,6 +5,8 @@ import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.user.UserProperties;
 import com.example.mux.user.model.User;
+import com.example.mux.user.model.dto.UpdateUserStepGoalDTO;
+import com.example.mux.user.model.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.mux.user.repository.UserRepository;
@@ -19,6 +21,17 @@ public class UserService {
     private final DayService dayService;
     private final UserProperties userProperties;
     private final EmailService emailService;
+
+    public UserDTO updateUserStepGoal(int userID, UpdateUserStepGoalDTO updateUserStepGoal) throws EntityNotFoundException, IllegalArgumentException {
+        if(updateUserStepGoal.getStepGoal() < 0){
+            throw new IllegalArgumentException("The value should be greater than 0.");
+        }
+        User user = getUser(userID);
+        user.setStepGoal(updateUserStepGoal.getStepGoal());
+
+        return new UserDTO(userRepository.save(user));
+    }
+
 
     public User getUser(String email) throws EntityNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User with this email not found."));
