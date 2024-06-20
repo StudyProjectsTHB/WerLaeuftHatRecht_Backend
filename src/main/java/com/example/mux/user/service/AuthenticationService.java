@@ -3,6 +3,7 @@ package com.example.mux.user.service;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.group.service.GroupService;
+import com.example.mux.user.UserProperties;
 import com.example.mux.user.exception.PasswordMismatchException;
 import com.example.mux.user.exception.TokenExpiredException;
 import com.example.mux.user.exception.TokenNotFoundException;
@@ -34,6 +35,7 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final GroupService groupService;
     private final EmailService emailService;
+    private final UserProperties userProperties;
 
     public AuthenticationResponseDTO authenticateUser(AuthenticationRequestDTO request) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -61,6 +63,7 @@ public class AuthenticationService {
             }
 
             User user = userToken.getUser();
+            user.setStepGoal(userProperties.getInitStepGoal());
             user.setPassword(userPasswords.getPassword());
 
             return userRepository.save(user);
@@ -85,7 +88,6 @@ public class AuthenticationService {
             user.setAdjective(competitionName.getFirst());
             user.setNoun(competitionName.getSecond());
             users.add(user);
-            System.out.println("Generated Name: " + competitionName.getFirst() + " " + competitionName.getSecond());
 
             userTokens.add(userTokenService.buildUserToken(user));
 

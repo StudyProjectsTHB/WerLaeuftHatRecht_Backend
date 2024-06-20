@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.util.Pair;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +45,9 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String adjective;
 
+    @Column(nullable = false)
+    private int stepGoal;
+
     @ManyToOne
     @JoinColumn(name = "group_ID")
     private Group group;
@@ -59,6 +63,11 @@ public class User implements UserDetails {
     public void setPassword(String password){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
+    }
+
+    public void setCompetitionName(Pair<String, String> adjective_noun) {
+        setAdjective(adjective_noun.getFirst());
+        setNoun(adjective_noun.getSecond());
     }
 
     @Override
@@ -98,6 +107,10 @@ public class User implements UserDetails {
 
     public String getCompetitionUserName(){
         return adjective + " " + noun;
+    }
+
+    public String toString() {
+        return String.join("", getAdjective(), " ", getNoun(), " - ", getEmail(), " in Group: ", getGroup().getName(), " with step goal: ", Integer.toString(getStepGoal()), "... PW: ", getPassword(), " | isAdmin: ", Boolean.toString(isAdmin));
     }
 
 }
