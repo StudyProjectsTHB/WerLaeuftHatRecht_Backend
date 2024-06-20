@@ -144,4 +144,8 @@ public class DayService {
     public void deleteDays() {
         dayRepository.deleteAll();
     }
+
+    public boolean existsForUserWitDateBetween(User user, LocalDate startDate, LocalDate endDate){
+        return dayRepository.existsByUserAndDateBetween(user, startDate, endDate);
+    }
 }
