@@ -19,6 +19,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+      env:
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      EMAIL: ${{ secrets.EMAIL }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      WEATHER_KEY: ${{ secrets.WEATHER_KEY }}
+    
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
