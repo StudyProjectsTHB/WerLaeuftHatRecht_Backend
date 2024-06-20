@@ -19,7 +19,7 @@ public class GroupService {
 
     public List<Group> createGroups(List<GroupCreationDTO> groupCreations){
         List<Group> groups = new LinkedList<>();
-        groupCreations.forEach(groupCreation -> groups.add(new Group(groupCreation.getName())));
+        groupCreations.forEach(groupCreation -> groups.add(new Group(groupCreation.getName(), groupCreation.getNumberOfEmployees())));
         return groupRepository.saveAll(groups);
     }
 
@@ -30,6 +30,7 @@ public class GroupService {
     public Group updateGroup(int ID, GroupCreationDTO groupCreation) throws EntityNotFoundException {
         Group group = groupRepository.findByID(ID).orElseThrow(()->new EntityNotFoundException("There is no group with this ID."));
         group.setName(groupCreation.getName());
+        group.setNumberOfEmployees(groupCreation.getNumberOfEmployees());
         return groupRepository.save(group);
     }
 

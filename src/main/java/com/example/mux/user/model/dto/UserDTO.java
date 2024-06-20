@@ -19,6 +19,7 @@ public class UserDTO {
     private String noun;
     private String adjective;
     private Group group;
+    private int stepGoal;
     private int ID;
 
     public UserDTO(User user){
@@ -28,6 +29,7 @@ public class UserDTO {
         setGroup(user.getGroup());
         this.isAdmin = user.isAdmin();
         setID(user.getID());
+        setStepGoal(user.getStepGoal());
     }
 
     public static List<UserDTO> fromUserList(List<User> users){
