@@ -23,7 +23,7 @@ public class EmailService {
     private String baseUrl;
 
     private static final String welcomeTemplate = "Hallo %s! " + "<p>Um beim Wettbewerb teilzunehmen, tippe bitte auf folgenden Link und vergib ein Passwort: <a href=\"%s\">Passwort vergeben</a> oder tippe auf folgenden Link: %s</p>";
-
+    private static final String reminderTemplate = "Hallo %s! " + "<p>Uns ist aufgefallen, dass du seit mindestens %s Tagen keine Schritte mehr eingetragen hast. Wenn du willst kannst du das gleich unter diesem Link nachholen: <a href=\"%s\">Zur Webseite</a>.</p>";
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -56,9 +56,14 @@ public class EmailService {
         }
     }
 
-    public String generateLoginLink(String token) {
-        // TODO: Path and baseURL (in application.properties
-        return baseUrl + "/path/to/login/" + token;
+    @Async
+    public void sendReminderEmail(User user, int numberOfDays) {
+        String message = String.format(reminderTemplate, user.getCompetitionUserName(), numberOfDays, baseUrl);
+            sendEmail(user.getEmail(), "Willst du Schritte eintragen?", message);
+    }
+
+    private String generateLoginLink(String token) {
+        return baseUrl + "/users/register/" + token;
     }
 
 }
