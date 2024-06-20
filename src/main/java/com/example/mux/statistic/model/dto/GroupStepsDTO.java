@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class GroupStepsDTO {
     Group group;
-    int steps;
+    float steps;
 
     public GroupStepsDTO(Group group, int steps){
-        setSteps(steps);
+        setSteps(steps / group.getNumberOfEmployees());
         setGroup(group);
     }
 }
