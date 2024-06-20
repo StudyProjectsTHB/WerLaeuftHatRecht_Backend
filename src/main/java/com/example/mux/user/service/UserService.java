@@ -1,18 +1,24 @@
 package com.example.mux.user.service;
 
+import com.example.mux.day.service.DayService;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
+import com.example.mux.user.UserProperties;
 import com.example.mux.user.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.mux.user.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final DayService dayService;
+    private final UserProperties userProperties;
+    private final EmailService emailService;
 
     public User getUser(String email) throws EntityNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User with this email not found."));
@@ -44,6 +50,19 @@ public class UserService {
             return userOptional.get();
         }else{
             return userRepository.save(user);
+        }
+    }
+
+    public void checkActivitiesAndSendReminder(){
+        LocalDate now = LocalDate.now();
+        LocalDate before = now.minusDays(userProperties.getRemindingDayLimit());
+        List<User> users = getUsers();
+        for(User user: users){
+            if(user.isEnabled()) {
+                if (!dayService.existsForUserWitDateBetween(user, before, now)) {
+                    emailService.sendReminderEmail(user, userProperties.getRemindingDayLimit());
+                }
+            }
         }
     }
 }

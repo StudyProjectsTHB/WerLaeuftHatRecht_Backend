@@ -2,6 +2,7 @@ package com.example.mux.competition.service;
 
 import com.example.mux.challenge.service.ChallengeService;
 import com.example.mux.competition.model.Competition;
+import com.example.mux.competition.model.dto.UpdateCompetitionDTO;
 import com.example.mux.competition.repository.CompetitionRepository;
 import com.example.mux.day.repository.DayRepository;
 import com.example.mux.day.service.DayService;
@@ -22,43 +23,42 @@ public class CompetitionService {
 
     public Competition getCompetition() throws EntityNotFoundException {
         List<Competition> competitionList = competitionRepository.findAll();
-        if(competitionList.size() > 0){
+        if (competitionList.size() > 0) {
             return competitionList.get(0);
-        }else{
+        } else {
             throw new EntityNotFoundException("No competition found");
         }
     }
 
     //TODO Start und Enddatum wird jedes mal übergeben und Competition wird jedes mal zurückgesetzt
-    public Competition updateCompetition() throws EntityNotFoundException {
+    public Competition updateCompetition(UpdateCompetitionDTO updateCompetition) throws EntityNotFoundException {
         Competition competition = getCompetition();
-        if(competition.isStarted()){
-            competition.setStarted(false);
-            competition.setEndDate(LocalDate.now());
-        }else{
+        if (updateCompetition.getStartDate() != null) {
+            competition.setStartDate(updateCompetition.getStartDate());
+        }
+        if (updateCompetition.getEndDate() != null) {
+            competition.setEndDate(updateCompetition.getEndDate());
+        }
+        if(!updateCompetition.getOnlyUpdate()){
             dayRepository.deleteAll();
-            competition.setEndDate(null);
-            competition.setStartDate(LocalDate.now());
-            // TODO Folgenden 2 Zeilen anpassen, je nachdem ob Änderung noch gemacht wird, dass parameter start und end auf jeden Fall übergeben werden
             LocalDate start = Objects.requireNonNullElse(competition.getStartDate(), LocalDate.now());
             LocalDate end = Objects.requireNonNullElse(competition.getEndDate(), start.plusMonths(3));
             challengeService.createChallenges(start, end);
-            competition.setStarted(true);
         }
 
         return competitionRepository.save(competition);
     }
 
-    public Competition createInitialCompetition(){
+    public Competition createInitialCompetition() {
         List<Competition> competitionList = competitionRepository.findAll();
-        if(competitionList.size() > 0){
+        if (competitionList.size() > 0) {
             return competitionList.get(0);
-        }else{
-            return competitionRepository.save(new Competition());
+        } else {
+            return competitionRepository.save(new Competition(LocalDate.now(), LocalDate.now().plusDays(7)));
         }
     }
 
-    public boolean competitionExists(){
+    public boolean competitionExists() {
         List<Competition> competitionList = competitionRepository.findAll();
         return competitionList.size() > 0;
     }
