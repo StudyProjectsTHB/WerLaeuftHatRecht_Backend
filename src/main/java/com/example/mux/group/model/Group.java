@@ -25,12 +25,15 @@ public class Group {
     @NotNull
     private String name;
 
-    public Group(String name){
-        this(0, name);
+    private int numberOfEmployees;
+
+    public Group(String name, int numberOfEmployees){
+        this(0, name, numberOfEmployees);
     }
 
-    public Group(int ID, String name){
+    public Group(int ID, String name, int numberOfEmployees ){
         setID(ID);
         setName(name);
+        setNumberOfEmployees(numberOfEmployees);
     }
 }

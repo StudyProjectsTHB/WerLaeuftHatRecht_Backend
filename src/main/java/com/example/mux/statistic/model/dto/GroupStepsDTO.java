@@ -11,10 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GroupStepsDTO {
-    Group group;
-    int steps;
+    private Group group;
+    private int steps;
 
-    public GroupStepsDTO(Group group, int steps){
+    public GroupStepsDTO(Group group, int steps) {
         setSteps(steps);
         setGroup(group);
     }

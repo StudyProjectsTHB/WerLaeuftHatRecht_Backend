@@ -33,7 +33,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
         try {
             group = groupService.getGroup(initProperties.getGroupName());
         }catch (EntityNotFoundException e){
-            group = groupService.createGroups(Collections.singletonList(new GroupCreationDTO(initProperties.getGroupName()))).get(0);
+            group = groupService.createGroups(Collections.singletonList(new GroupCreationDTO(initProperties.getGroupName(), 10))).get(0);
         }
 
         if(!userService.userExists(initProperties.getEmail())){
@@ -47,8 +47,8 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
 
     private void createTestData(){
 
-        Group group1 = groupService.createIfNotExist(new Group("OLG Brandenburg"));
-        Group group2 = groupService.createIfNotExist(new Group("AG Potsdam"));
+        Group group1 = groupService.createIfNotExist(new Group("OLG Brandenburg", 10));
+        Group group2 = groupService.createIfNotExist(new Group("AG Potsdam", 12));
         User user1 = new User("admin@admin.de", true);
         user1.setPassword("admin");
         user1.setGroup(group1);
