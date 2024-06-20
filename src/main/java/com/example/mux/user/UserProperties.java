@@ -12,4 +12,5 @@ public class UserProperties {
     private int expiresAfter;
     private String secretKey;
     private int remindingDayLimit;
+    private int initStepGoal;
 }

@@ -13,6 +13,7 @@ import com.example.mux.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class StatisticService {
         for(User user: users){
             userSteps.add(createUserStatistic(user, statisticDuration));
         }
+        Collections.sort(userSteps);
         return userSteps;
     }
 
@@ -68,10 +70,11 @@ public class StatisticService {
     }
 
     public List<GroupStepsDTO> createGroupStatistics(StatisticDurationDTO statisticDuration){
-        List<GroupStepsDTO> userSteps = new LinkedList<>();
+        List<GroupStepsDTO> groupSteps = new LinkedList<>();
         for(Group group: groupService.getGroups()){
-            userSteps.add(createGroupStatistic(group, statisticDuration));
+            groupSteps.add(createGroupStatistic(group, statisticDuration));
         }
-        return userSteps;
+        Collections.sort(groupSteps);
+        return groupSteps;
     }
 }
