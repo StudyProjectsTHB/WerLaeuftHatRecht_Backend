@@ -30,4 +30,8 @@ public class AvailableNameService {
         }
         Collections.shuffle(availableNames);
     }
+
+    public static int getNumberOfAvailableNames(){
+        return availableNames.size();
+    }
 }
