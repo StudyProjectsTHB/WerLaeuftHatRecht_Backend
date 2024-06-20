@@ -15,7 +15,11 @@ public class GroupStepsDTO {
     float steps;
 
     public GroupStepsDTO(Group group, int steps){
-        setSteps(steps / group.getNumberOfEmployees());
+        if(group.getNumberOfEmployees()==0){
+            setSteps(0);
+        }else{
+            setSteps(steps / group.getNumberOfEmployees());
+        }
         setGroup(group);
     }
 }
