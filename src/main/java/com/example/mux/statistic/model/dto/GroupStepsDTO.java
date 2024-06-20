@@ -11,15 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GroupStepsDTO {
-    Group group;
-    float steps;
+    private Group group;
+    private int steps;
 
-    public GroupStepsDTO(Group group, int steps){
-        if(group.getNumberOfEmployees()==0){
-            setSteps(0);
-        }else{
-            setSteps(steps / group.getNumberOfEmployees());
-        }
+    public GroupStepsDTO(Group group, int steps) {
+        setSteps(steps);
         setGroup(group);
     }
 }
