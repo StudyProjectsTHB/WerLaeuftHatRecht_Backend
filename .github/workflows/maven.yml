@@ -19,7 +19,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-      env:
+    env:
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       EMAIL: ${{ secrets.EMAIL }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
