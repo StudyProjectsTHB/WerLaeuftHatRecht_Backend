@@ -22,7 +22,10 @@ public class UserService {
     private final UserProperties userProperties;
     private final EmailService emailService;
 
-    public UserDTO updateUserStepGoal(int userID, UpdateUserStepGoalDTO updateUserStepGoal) throws EntityNotFoundException {
+    public UserDTO updateUserStepGoal(int userID, UpdateUserStepGoalDTO updateUserStepGoal) throws EntityNotFoundException, IllegalArgumentException {
+        if(updateUserStepGoal.getStepGoal() < 0){
+            throw new IllegalArgumentException("The value should be greater than 0.");
+        }
         User user = getUser(userID);
         user.setStepGoal(updateUserStepGoal.getStepGoal());
 

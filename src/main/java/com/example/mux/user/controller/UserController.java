@@ -79,6 +79,8 @@ public class UserController {
             return ResponseEntity.ok(userService.updateUserStepGoal(ID, updateUserStepGoal));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
