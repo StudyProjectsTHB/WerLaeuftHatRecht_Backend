@@ -4,6 +4,7 @@ import com.example.mux.day.model.Day;
 import com.example.mux.group.model.Group;
 import com.example.mux.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,4 +21,5 @@ public interface DayRepository extends JpaRepository<Day, Integer> {
     List<Day> findAllByUser_GroupAndDateBetween(Group group, LocalDate startDate, LocalDate endDate);
     List<Day> findAllByUser_GroupAndDateGreaterThanEqual(Group group, LocalDate startDate);
     List<Day> findAllByUser_GroupAndDateLessThanEqual(Group group, LocalDate endDate);
+    boolean existsByUserAndDateBetween(User user, LocalDate startDate, LocalDate endDate);
 }
