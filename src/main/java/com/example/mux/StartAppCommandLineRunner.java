@@ -77,8 +77,5 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
         final List<String> adjectives = Arrays.asList("schneller", "schöner", "perfekter", "attraktiver", "fleißiger", "eifriger", "herzlicher", "glücklicher", "lieber", "lustiger", "selbstbewusster", "sympathischer", "starker", "stolzer", "toller", "überragender", "vorbildlicher", "wendiger", "zauberhafter");
         final List<String> nouns = Arrays.asList("Löwe", "Pinguin", "Elch", "Bär", "Affe", "Fuchs", "Luchs");
         AvailableNameService.generateAvailableNames(adjectives, nouns);
-
-        WeatherController w = new WeatherController();
-        w.getWeather();
     }
 }
