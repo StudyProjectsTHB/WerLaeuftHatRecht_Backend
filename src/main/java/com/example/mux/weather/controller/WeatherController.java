@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/weather")
 @AllArgsConstructor
 public class WeatherController {
-    private WeatherService weatherService;
+    private final WeatherService weatherService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getWeather() {
