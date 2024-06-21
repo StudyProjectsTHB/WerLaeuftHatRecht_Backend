@@ -62,6 +62,7 @@ public class User implements UserDetails {
     public User(String email, boolean isAdmin){
         this.isAdmin = isAdmin;
         this.email = email;
+        setHeight(0);
     }
 
     public void setPassword(String password){
