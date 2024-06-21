@@ -31,9 +31,9 @@ public class ApplicationSecurity {
                         .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/register/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/logout").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/users/register/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/users/logout").hasAnyRole("ADMIN", "USER")
 
                         .requestMatchers("/groups/*").hasRole("ADMIN")
                         .requestMatchers("/groups/*/users").hasAnyRole("USER", "ADMIN")
@@ -50,7 +50,7 @@ public class ApplicationSecurity {
                         .requestMatchers("/challenges/**").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/competition").hasRole("ADMIN")
-                        .anyRequest().permitAll()/*.authenticated()*/)
+                        .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
