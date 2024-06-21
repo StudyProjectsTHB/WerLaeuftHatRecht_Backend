@@ -1,25 +1,24 @@
 package com.example.mux;
 
+import com.example.mux.competition.model.dto.UpdateCompetitionDTO;
 import com.example.mux.competition.service.CompetitionService;
-import com.example.mux.exception.EntityNotFoundException;
+import com.example.mux.day.model.Day;
+import com.example.mux.day.repository.DayRepository;
+import com.example.mux.day.service.DayService;
 import com.example.mux.group.model.Group;
 import com.example.mux.group.model.dto.GroupCreationDTO;
 import com.example.mux.group.service.GroupService;
 import com.example.mux.user.model.User;
-import com.example.mux.user.model.UserToken;
-import com.example.mux.user.model.dto.UserCreationDTO;
-import com.example.mux.user.service.AuthenticationService;
 import com.example.mux.user.service.AvailableNameService;
 import com.example.mux.user.service.UserService;
-import com.example.mux.weather.controller.WeatherController;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 @Component
 @AllArgsConstructor
@@ -27,28 +26,72 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
     private final InitProperties initProperties;
     private final GroupService groupService;
     private final UserService userService;
-    private final AuthenticationService authenticationService;
+    private final DayService dayService;
     private final CompetitionService competitionService;
+
+    @Value("${app.user.adjectives}")
+    private final ArrayList<String> userAdjectives;
+
+    @Value("${app.user.nouns}")
+    private final ArrayList<String> userNouns;
+    private final DayRepository dayRepository;
 
     @Override
     public void run(String... args) throws Exception {
         competitionService.createInitialCompetition();
+        competitionService.updateCompetition(new UpdateCompetitionDTO(LocalDate.now().minusDays(32), LocalDate.now().plusDays(35), false));
         generateUserNames();
+        System.out.println("\n\nCompetition Names left: " + AvailableNameService.getNumberOfAvailableNames());
 
-        Group group;
-        try {
-            group = groupService.getGroup(initProperties.getGroupName());
-        }catch (EntityNotFoundException e){
-            group = groupService.createGroups(Collections.singletonList(new GroupCreationDTO(initProperties.getGroupName(), 10))).get(0);
+        if(checkIfDaysUsersGroupsEmpty()){
+            Random random = new Random();
+
+            // Create groups
+            List<GroupCreationDTO> groupDTOs = new ArrayList<>();
+            for (String groupName : initProperties.getGroupNames()) {
+                groupDTOs.add(new GroupCreationDTO(groupName, random.nextInt(40)+10));
+            }
+            List<Group> groups = groupService.createGroups(groupDTOs);
+
+            // Create Users
+            ArrayList<User> users = new ArrayList<>();
+            int numUsers = groups.size() * 10;
+            for (int i = 0; i < numUsers; i++) {
+                users.add(new User("user"+i+"@gericht-brb.xx",(i == 0) || (random.nextFloat() < 0.1)));
+            }
+            for (int i = 0; i < users.size(); i++) {
+                User u = users.get(i);
+                u.setGroup((i < 5) ? groups.get(0) : ((i >= users.size()-2) ? groups.get(groups.size()-1) : groups.get(random.nextInt(groups.size()-1))));
+                u.setPassword("12345678");
+                u.setCompetitionName(AvailableNameService.getAvailableName());
+                int stepFactor = random.nextInt(130)+20;
+                if(random.nextFloat()<0.5) {
+                    u.setStepGoal((random.nextInt(100)+100)*stepFactor);
+                }
+
+                System.out.println("\n\nCreated User: " + u);
+
+                boolean stepsEveryDay = random.nextFloat() < 0.5;
+                ArrayList<Day> days = new ArrayList<>();
+                for(LocalDate date = competitionService.getCompetition().getStartDate(); !date.isAfter(LocalDate.now()); date = date.plusDays(1)){
+                    if(stepsEveryDay || random.nextFloat() < 0.8) {
+                        days.add(new Day(date, (random.nextInt(stepFactor)*random.nextInt(100)+100*stepFactor), u));
+                        System.out.print(days.get(days.size()-1).getSteps() + " ");
+                    } else {
+                        System.out.print("0 ");
+                    }
+                }
+                userService.createAndRegisterIfNotExist(u);
+                dayRepository.saveAll(days);
+            }
+
         }
+        System.out.println("\n\nCompetition Names left: " + AvailableNameService.getNumberOfAvailableNames());
 
-        if(!userService.userExists(initProperties.getEmail())){
-            UserToken userToken = authenticationService.createUsers(Collections.singletonList(new UserCreationDTO(initProperties.getEmail(), true, group.getID()))).get(0);
-            System.out.println(userToken.getToken());
-        }
+    }
 
-        createTestData();
-
+    private boolean checkIfDaysUsersGroupsEmpty(){
+        return dayService.getDays().isEmpty() && userService.getUsers().isEmpty() && groupService.getGroups().isEmpty();
     }
 
     private void createTestData(){
@@ -74,11 +117,6 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
 
     @SneakyThrows
     private void generateUserNames(){
-        final List<String> adjectives = Arrays.asList("schneller", "schöner", "perfekter", "attraktiver", "fleißiger", "eifriger", "herzlicher", "glücklicher", "lieber", "lustiger", "selbstbewusster", "sympathischer", "starker", "stolzer", "toller", "überragender", "vorbildlicher", "wendiger", "zauberhafter");
-        final List<String> nouns = Arrays.asList("Löwe", "Pinguin", "Elch", "Bär", "Affe", "Fuchs", "Luchs");
-        AvailableNameService.generateAvailableNames(adjectives, nouns);
-
-        WeatherController w = new WeatherController();
-        w.getWeather();
+        AvailableNameService.generateAvailableNames(userAdjectives, userNouns);
     }
 }

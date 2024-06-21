@@ -88,7 +88,6 @@ public class AuthenticationService {
             user.setAdjective(competitionName.getFirst());
             user.setNoun(competitionName.getSecond());
             users.add(user);
-            System.out.println("Generated Name: " + competitionName.getFirst() + " " + competitionName.getSecond());
 
             userTokens.add(userTokenService.buildUserToken(user));
 
