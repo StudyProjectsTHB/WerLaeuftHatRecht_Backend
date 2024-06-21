@@ -21,6 +21,9 @@ public class UserDTO {
     private Group group;
     private int stepGoal;
     private int ID;
+    private Integer height;
+
+    private Integer stepSize;
 
     public UserDTO(User user){
         setEmail(user.getEmail());
@@ -30,6 +33,8 @@ public class UserDTO {
         this.isAdmin = user.isAdmin();
         setID(user.getID());
         setStepGoal(user.getStepGoal());
+        setHeight(user.getHeight());
+        setStepSize(user.getStepSize());
     }
 
     public static List<UserDTO> fromUserList(List<User> users){

@@ -47,6 +47,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private int stepGoal;
 
+    private Integer height;
+
+    private Integer stepSize;
+
     @ManyToOne
     @JoinColumn(name = "group_ID")
     private Group group;

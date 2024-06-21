@@ -7,6 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateUserStepGoalDTO {
-    private int stepGoal;
+public class UpdateUserDTO {
+    private Integer stepGoal;
+    private Integer height;
+    private Integer stepSize;
 }

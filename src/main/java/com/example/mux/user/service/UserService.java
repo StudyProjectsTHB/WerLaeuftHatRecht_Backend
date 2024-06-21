@@ -5,7 +5,7 @@ import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.user.UserProperties;
 import com.example.mux.user.model.User;
-import com.example.mux.user.model.dto.UpdateUserStepGoalDTO;
+import com.example.mux.user.model.dto.UpdateUserDTO;
 import com.example.mux.user.model.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,28 @@ public class UserService {
     private final UserProperties userProperties;
     private final EmailService emailService;
 
-    public UserDTO updateUserStepGoal(int userID, UpdateUserStepGoalDTO updateUserStepGoal) throws EntityNotFoundException, IllegalArgumentException {
-        if(updateUserStepGoal.getStepGoal() < 0){
-            throw new IllegalArgumentException("The value should be greater than 0.");
-        }
+    public UserDTO updateUser(int userID, UpdateUserDTO updateUserStepGoal) throws EntityNotFoundException, IllegalArgumentException {
         User user = getUser(userID);
-        user.setStepGoal(updateUserStepGoal.getStepGoal());
+        if(updateUserStepGoal.getStepGoal() != null) {
+            if (updateUserStepGoal.getStepGoal() < 0) {
+                throw new IllegalArgumentException("The value should be greater than 0.");
+            }
+
+            user.setStepGoal(updateUserStepGoal.getStepGoal());
+        }
+
+        if(updateUserStepGoal.getStepSize() != null || updateUserStepGoal.getHeight() != null){
+            if(updateUserStepGoal.getStepSize() != null && updateUserStepGoal.getHeight() != null){
+                throw new IllegalArgumentException("The users height and step size could not be set simultaneously.");
+            }
+            if(updateUserStepGoal.getHeight() != null){
+                user.setHeight(updateUserStepGoal.getHeight());
+                user.setStepSize(null);
+            }else{
+                user.setStepSize(updateUserStepGoal.getStepSize());
+                user.setHeight(null);
+            }
+        }
 
         return new UserDTO(userRepository.save(user));
     }

@@ -6,7 +6,6 @@ import com.example.mux.user.exception.TokenExpiredException;
 import com.example.mux.user.exception.TokenNotFoundException;
 import com.example.mux.user.model.dto.*;
 import com.example.mux.user.service.AuthenticationService;
-import com.example.mux.user.service.JWTManagerService;
 import com.example.mux.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -74,9 +73,9 @@ public class UserController {
 
     @PutMapping("/{ID}")
     @ResponseBody
-    public ResponseEntity<UserDTO> updateUserStepGoal(@PathVariable int ID, @RequestBody UpdateUserStepGoalDTO updateUserStepGoal){
+    public ResponseEntity<UserDTO> updateUser(@PathVariable int ID, @RequestBody UpdateUserDTO updateUser){
         try {
-            return ResponseEntity.ok(userService.updateUserStepGoal(ID, updateUserStepGoal));
+            return ResponseEntity.ok(userService.updateUser(ID, updateUser));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }catch (IllegalArgumentException e){

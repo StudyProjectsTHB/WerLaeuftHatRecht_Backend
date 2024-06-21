@@ -2,6 +2,7 @@ package com.example.mux.statistic.controller;
 
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.statistic.model.dto.GroupStepsDTO;
+import com.example.mux.statistic.model.dto.SingleUserStepsDTO;
 import com.example.mux.statistic.model.dto.StatisticDurationDTO;
 import com.example.mux.statistic.model.dto.UserStepsDTO;
 import com.example.mux.statistic.service.StatisticService;
@@ -20,9 +21,9 @@ public class StatisticController {
 
     @GetMapping("/users/{ID}")
     @ResponseBody
-    public ResponseEntity<UserStepsDTO> createUserStatistic(@PathVariable int ID, @RequestBody StatisticDurationDTO statisticDuration){
+    public ResponseEntity<SingleUserStepsDTO> createUserStatistic(@PathVariable int ID, @RequestBody StatisticDurationDTO statisticDuration){
         try {
-            return ResponseEntity.ok(statisticService.createUserStatistic(ID, statisticDuration));
+            return ResponseEntity.ok(statisticService.createSingleUserStatistic(ID, statisticDuration));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
