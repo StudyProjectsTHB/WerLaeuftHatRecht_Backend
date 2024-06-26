@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,8 +64,17 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> getUsers(){
-        List<UserDTO> users = UserDTO.fromUserList(userService.getUsers());;
+        List<UserDTO> users = UserDTO.fromUserList(userService.getUsers());
         return users;
+    }
+
+    @GetMapping("/self")
+    public ResponseEntity<UserDTO> getOwnUser(@AuthenticationPrincipal UserDetails userDetail){
+        try {
+            return ResponseEntity.ok(new UserDTO(userService.getUser(userDetail.getUsername())));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/{ID}")
