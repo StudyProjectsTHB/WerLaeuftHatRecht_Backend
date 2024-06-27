@@ -36,6 +36,7 @@ public class AuthenticationService {
     private final GroupService groupService;
     private final EmailService emailService;
     private final UserProperties userProperties;
+    private final UserService userService;
 
     public AuthenticationResponseDTO authenticateUser(AuthenticationRequestDTO request) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -51,18 +52,7 @@ public class AuthenticationService {
 
     public User registerUser(UserPasswordsDTO userPasswords, String token) throws TokenNotFoundException, TokenExpiredException, PasswordMismatchException {
         try {
-            UUID uuid = UUID.fromString(token);
-            UserToken userToken = userTokenService.getUserToken(uuid);
-
-            if (LocalDateTime.now().isAfter(userToken.getExpiresAt())) {
-                throw new TokenExpiredException("The token is expired.");
-            }
-
-            if (!userPasswords.getPassword().equals(userPasswords.getPasswordConfirm())) {
-                throw new PasswordMismatchException("The passwords do not match.");
-            }
-
-            User user = userToken.getUser();
+            User user = userService.getUserFromToken(userPasswords, token, userTokenService);
             user.setStepGoal(userProperties.getInitStepGoal());
             user.setPassword(userPasswords.getPassword());
 

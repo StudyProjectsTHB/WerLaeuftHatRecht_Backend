@@ -41,13 +41,13 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
         generateUserNames();
         System.out.println("\n\nCompetition Names left: " + AvailableNameService.getNumberOfAvailableNames());
 
-        if(checkIfDaysUsersGroupsEmpty()){
+        if (checkIfDaysUsersGroupsEmpty()) {
             Random random = new Random();
 
             // Create groups
             List<GroupCreationDTO> groupDTOs = new ArrayList<>();
             for (String groupName : initProperties.getGroupNames()) {
-                groupDTOs.add(new GroupCreationDTO(groupName, random.nextInt(40)+10));
+                groupDTOs.add(new GroupCreationDTO(groupName, random.nextInt(40) + 10));
             }
             List<Group> groups = groupService.createGroups(groupDTOs);
 
@@ -55,26 +55,26 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
             ArrayList<User> users = new ArrayList<>();
             int numUsers = groups.size() * 10;
             for (int i = 0; i < numUsers; i++) {
-                users.add(new User("user"+i+"@gericht-brb.xx",(i == 0) || (random.nextFloat() < 0.1)));
+                users.add(new User("user" + i + "@gericht-brb.xx", (i == 0) || (random.nextFloat() < 0.1)));
             }
             for (int i = 0; i < users.size(); i++) {
                 User u = users.get(i);
-                u.setGroup((i < 5) ? groups.get(0) : ((i >= users.size()-2) ? groups.get(groups.size()-1) : groups.get(random.nextInt(groups.size()-1))));
+                u.setGroup((i < 5) ? groups.get(0) : ((i >= users.size() - 2) ? groups.get(groups.size() - 1) : groups.get(random.nextInt(groups.size() - 1))));
                 u.setPassword("12345678");
                 u.setCompetitionName(AvailableNameService.getAvailableName());
-                int stepFactor = random.nextInt(130)+20;
-                if(random.nextFloat()<0.5) {
-                    u.setStepGoal((random.nextInt(100)+100)*stepFactor);
+                int stepFactor = random.nextInt(130) + 20;
+                if (random.nextFloat() < 0.5) {
+                    u.setStepGoal((random.nextInt(100) + 100) * stepFactor);
                 }
 
                 System.out.println("\n\nCreated User: " + u);
 
                 boolean stepsEveryDay = random.nextFloat() < 0.5;
                 ArrayList<Day> days = new ArrayList<>();
-                for(LocalDate date = competitionService.getCompetition().getStartDate(); !date.isAfter(LocalDate.now()); date = date.plusDays(1)){
-                    if(stepsEveryDay || random.nextFloat() < 0.8) {
-                        days.add(new Day(date, (random.nextInt(stepFactor)*random.nextInt(100)+100*stepFactor), u));
-                        System.out.print(days.get(days.size()-1).getSteps() + " ");
+                for (LocalDate date = competitionService.getCompetition().getStartDate(); !date.isAfter(LocalDate.now()); date = date.plusDays(1)) {
+                    if (stepsEveryDay || random.nextFloat() < 0.8) {
+                        days.add(new Day(date, (random.nextInt(stepFactor) * random.nextInt(100) + 100 * stepFactor), u));
+                        System.out.print(days.get(days.size() - 1).getSteps() + " ");
                     } else {
                         System.out.print("0 ");
                     }
@@ -88,11 +88,11 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
 
     }
 
-    private boolean checkIfDaysUsersGroupsEmpty(){
+    private boolean checkIfDaysUsersGroupsEmpty() {
         return dayService.getDays().isEmpty() && userService.getUsers().isEmpty() && groupService.getGroups().isEmpty();
     }
 
-    private void createTestData(){
+    private void createTestData() {
 
         Group group1 = groupService.createIfNotExist(new Group("OLG Brandenburg", 10));
         Group group2 = groupService.createIfNotExist(new Group("AG Potsdam", 12));
@@ -114,7 +114,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
     }
 
     @SneakyThrows
-    private void generateUserNames(){
+    private void generateUserNames() {
         AvailableNameService.generateAvailableNames(userAdjectives, userNouns);
     }
 }

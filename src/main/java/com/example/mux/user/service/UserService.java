@@ -4,15 +4,22 @@ import com.example.mux.day.service.DayService;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.user.UserProperties;
+import com.example.mux.user.exception.PasswordMismatchException;
+import com.example.mux.user.exception.TokenExpiredException;
 import com.example.mux.user.model.User;
+import com.example.mux.user.model.UserToken;
+import com.example.mux.user.model.dto.EmailDTO;
 import com.example.mux.user.model.dto.UpdateUserDTO;
 import com.example.mux.user.model.dto.UserDTO;
+import com.example.mux.user.model.dto.UserPasswordsDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.mux.user.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +28,7 @@ public class UserService {
     private final DayService dayService;
     private final UserProperties userProperties;
     private final EmailService emailService;
+    private final UserTokenService userTokenService;
 
     public UserDTO updateUser(int userID, UpdateUserDTO updateUserStepGoal) throws EntityNotFoundException, IllegalArgumentException {
         User user = getUser(userID);
@@ -93,5 +101,35 @@ public class UserService {
                 }
             }
         }
+    }
+
+    public void startPasswordResetProcess(EmailDTO emailDTO) throws EntityNotFoundException {
+        User user = userRepository.getUserByEmail(emailDTO.getEmail()).orElseThrow(() -> new EntityNotFoundException("User with this email not found."));
+        UserToken userToken = userTokenService.buildUserToken(user);
+        userTokenService.saveUserToken(userToken);
+        emailService.sendPasswordResetEmail(user, userToken);
+    }
+
+    public void resetPassword(UserPasswordsDTO userPasswords,String token) throws EntityNotFoundException, TokenExpiredException, PasswordMismatchException {
+        User user = getUserFromToken(userPasswords, token, userTokenService);
+
+        user.setPassword(userPasswords.getPassword());
+
+        userRepository.save(user);
+    }
+
+    public User getUserFromToken(UserPasswordsDTO userPasswords, String token, UserTokenService userTokenService) throws EntityNotFoundException, TokenExpiredException, PasswordMismatchException {
+        UUID uuid = UUID.fromString(token);
+        UserToken userToken = userTokenService.getUserToken(uuid);
+
+        if (LocalDateTime.now().isAfter(userToken.getExpiresAt())) {
+            throw new TokenExpiredException("The token is expired.");
+        }
+
+        if (!userPasswords.getPassword().equals(userPasswords.getPasswordConfirm())) {
+            throw new PasswordMismatchException("The passwords do not match.");
+        }
+
+        return userToken.getUser();
     }
 }

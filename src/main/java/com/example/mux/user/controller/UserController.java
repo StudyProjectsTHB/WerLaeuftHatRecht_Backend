@@ -95,4 +95,30 @@ public class UserController {
         }
     }
 
+    @PostMapping("/password/reset")
+    @ResponseBody
+    public ResponseEntity startPasswordReset(@RequestBody EmailDTO emailDTO) {
+        try {
+            userService.startPasswordResetProcess(emailDTO);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PutMapping("/password/reset/{token}")
+    @ResponseBody
+    public ResponseEntity startPasswordReset(@RequestBody UserPasswordsDTO userPasswords, @PathVariable String token) {
+        try {
+            userService.resetPassword(userPasswords, token);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (TokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (PasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 }
