@@ -29,11 +29,9 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
     private final DayService dayService;
     private final CompetitionService competitionService;
 
-    @Value("${app.user.adjectives}")
-    private final ArrayList<String> userAdjectives;
+    private final ArrayList<String> userAdjectives = new ArrayList<>(Arrays.asList("schneller", "schöner", "perfekter", "attraktiver", "fleissiger", "eifriger", "herzlicher", "glücklicher", "lieber", "lustiger", "selbstbewusster", "sympathischer", "starker", "stolzer", "toller", "überragender", "vorbildlicher", "wendiger", "zauberhafter"));
 
-    @Value("${app.user.nouns}")
-    private final ArrayList<String> userNouns;
+    private final ArrayList<String> userNouns = new ArrayList<>(Arrays.asList("Löwe", "Pinguin", "Elch", "Bär", "Affe", "Fuchs", "Luchs", "Igel", "Tiger", "Wolf"));
     private final DayRepository dayRepository;
 
     @Override
