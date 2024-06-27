@@ -78,7 +78,7 @@ public class ChallengeService {
             time = (int) (4*factor);                                                                   // 2-6 days in a row
             amount = random.nextInt(4) * 500 + 4000 + Math.round(4000 / (factor*500))*500;      // 6500-14000 steps
             prefix = "Laufe an";
-            timeUnit = "aufeinanderfolgenden Tagen mindestens je";
+            timeUnit = "fortlaufenden Tagen mindestens je";
             amountUnit = "Schritte";
             primaryUnit = "Tage";
         } else if (type == ChallengeTypeEnum.EACH_DAY) {
