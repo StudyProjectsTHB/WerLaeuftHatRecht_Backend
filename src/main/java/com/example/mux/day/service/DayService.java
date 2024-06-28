@@ -105,9 +105,9 @@ public class DayService {
         List<Day> resultDays = null;
         if (startDate == null && endDate == null) {
             resultDays = dayRepository.findAllByUser(user);
-        } else if (startDate != null) {
+        } else if (startDate != null && endDate == null) {
             resultDays = dayRepository.findAllByUserAndDateGreaterThanEqual(user, startDate);
-        } else if (endDate != null) {
+        } else if (endDate != null && startDate == null) {
             resultDays = dayRepository.findAllByUserAndDateLessThanEqual(user, endDate);
         } else {
             resultDays = dayRepository.findAllByUserAndDateBetween(user, startDate, endDate);

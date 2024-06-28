@@ -48,7 +48,9 @@ public class StatisticService {
 
     public List<UserStepsDTO> createGroupUserStatistic(Group group, StatisticDurationDTO statisticDuration){
         List<User> users = userService.getUsers(group);
-        return createUserStatisticsForUsers(users, statisticDuration);
+        List<UserStepsDTO> result = createUserStatisticsForUsers(users, statisticDuration);
+        Collections.sort(result);
+        return result;
     }
 
     private List<UserStepsDTO> createUserStatisticsForUsers(List<User> users, StatisticDurationDTO statisticDuration){
