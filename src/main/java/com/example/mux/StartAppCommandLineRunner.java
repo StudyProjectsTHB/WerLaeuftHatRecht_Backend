@@ -9,6 +9,7 @@ import com.example.mux.group.model.Group;
 import com.example.mux.group.model.dto.GroupCreationDTO;
 import com.example.mux.group.service.GroupService;
 import com.example.mux.user.model.User;
+import com.example.mux.user.repository.UserRepository;
 import com.example.mux.user.service.AvailableNameService;
 import com.example.mux.user.service.UserService;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
 
     private final ArrayList<String> userNouns = new ArrayList<>(Arrays.asList("Löwe", "Pinguin", "Elch", "Bär", "Affe", "Fuchs", "Luchs", "Igel", "Tiger", "Wolf"));
     private final DayRepository dayRepository;
+    public final UserRepository userRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -62,25 +64,29 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
                 u.setGroup((i < 5) ? groups.get(0) : ((i >= users.size() - 2) ? groups.get(groups.size() - 1) : groups.get(random.nextInt(groups.size() - 1))));
                 u.setPassword("12345678");
                 u.setCompetitionName(AvailableNameService.getAvailableName());
-                int stepFactor = random.nextInt(130) + 20;
+                int stepFactor = (i==0) ? 150 : random.nextInt(130) + 20;
                 if (random.nextFloat() < 0.5) {
                     u.setStepGoal((random.nextInt(100) + 100) * stepFactor);
                 }
 
                 System.out.println("\n\nCreated User: " + u);
 
-                boolean stepsEveryDay = random.nextFloat() < 0.5;
-                ArrayList<Day> days = new ArrayList<>();
+                boolean stepsEveryDay = i == 0 || random.nextFloat() < 0.5;
+                HashSet<Day> days = new HashSet<>();
                 for (LocalDate date = competitionService.getCompetition().getStartDate(); !date.isAfter(LocalDate.now()); date = date.plusDays(1)) {
                     if (stepsEveryDay || random.nextFloat() < 0.8) {
-                        days.add(new Day(date, (random.nextInt(stepFactor) * random.nextInt(100) + 100 * stepFactor), u));
-                        System.out.print(days.get(days.size() - 1).getSteps() + " ");
+                        Day d = new Day(date, (random.nextInt(stepFactor) * random.nextInt(100) + 100 * stepFactor), u);
+                        days.add(d);
+                        System.out.print(d.getSteps() + " ");
                     } else {
                         System.out.print("0 ");
                     }
                 }
-                userService.createAndRegisterIfNotExist(u);
+                User current_u = userService.createAndRegisterIfNotExist(u);
                 dayRepository.saveAll(days);
+                current_u.setDays(days);
+                userRepository.save(current_u);
+
             }
 
         }

@@ -1,6 +1,6 @@
 package com.example.mux.challenge.controller;
 
-import com.example.mux.challenge.model.dto.UserChallengeDTO;
+import com.example.mux.challenge.model.dto.ChallengeDTO;
 import com.example.mux.challenge.service.ChallengeService;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.user.service.UserService;
@@ -24,9 +24,9 @@ public class ChallengeController {
     private final UserService userService;
 
     @GetMapping("/{date}")
-    public ResponseEntity<List<UserChallengeDTO>> getChallenges(@PathVariable LocalDate date, @AuthenticationPrincipal UserDetails userDetail){
+    public ResponseEntity<List<ChallengeDTO>> getChallenges(@PathVariable LocalDate date, @AuthenticationPrincipal UserDetails userDetail){
         try {
-            List<UserChallengeDTO> userChallenges = challengeService.getUserChallenge(userService.getUser(userDetail.getUsername()),date);
+            List<ChallengeDTO> userChallenges = challengeService.getUserChallenge(userService.getUser(userDetail.getUsername()),date);
             return ResponseEntity.ok(userChallenges);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

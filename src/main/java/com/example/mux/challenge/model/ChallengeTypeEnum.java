@@ -7,9 +7,9 @@ public enum ChallengeTypeEnum {
     /**
      * x = time
      * y = amount
-     * CONSECUTIVELY: Laufe an x aufeinanderfolgenden Tagen y Schritte.
-     * EACH_DAY: Laufe an x Tagen je y Schritte.
-     * TOTAL_DAYS: Laufe an x Tagen insgesamt y Schritte.
+     * CONSECUTIVELY: Laufe an x fortlaufenden Tagen mindestens y Schritte.
+     * EACH_DAY: Laufe an x Tagen mindestens je y Schritte.
+     * TOTAL_DAYS: Laufe an x Tagen insgesamt mindestens y Schritte.
      * TOTAL_STEPS: Laufe in dieser Woche insgesamt y Schritte.
      */
     CONSECUTIVELY, EACH_DAY, TOTAL_DAYS, TOTAL_STEPS;
