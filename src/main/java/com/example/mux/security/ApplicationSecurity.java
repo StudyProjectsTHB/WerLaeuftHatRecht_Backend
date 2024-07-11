@@ -47,12 +47,13 @@ public class ApplicationSecurity {
 
                         .requestMatchers("/statistics/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/statistics/users").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/statistics/groups/**").hasRole("ADMIN")
+                        .requestMatchers("/statistics/groups/*").hasRole("ADMIN")
                         .requestMatchers("/statistics/groups").hasRole("ADMIN")
+                        .requestMatchers("/statistics/groups/*/users").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/challenges/**").hasAnyRole("USER", "ADMIN")
 
-                        .requestMatchers("/competition").hasRole("ADMIN")
+                        .requestMatchers("/competition").hasAnyRole("USER", "ADMIN")
                         .anyRequest().permitAll())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

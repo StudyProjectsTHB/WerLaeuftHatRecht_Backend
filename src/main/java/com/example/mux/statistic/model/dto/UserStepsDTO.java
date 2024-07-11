@@ -13,12 +13,14 @@ import lombok.Setter;
 public class UserStepsDTO implements Comparable<UserStepsDTO>{
     private String noun;
     private String adjective;
+    private int id;
     int steps;
 
     public UserStepsDTO(User user, int steps){
         setSteps(steps);
         setNoun(user.getNoun());
         setAdjective(user.getAdjective());
+        setId(user.getID());
     }
 
     @Override

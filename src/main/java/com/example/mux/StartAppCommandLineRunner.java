@@ -64,7 +64,8 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
                 u.setCompetitionName(AvailableNameService.getAvailableName());
                 int stepFactor = random.nextInt(130) + 20;
                 if (random.nextFloat() < 0.5) {
-                    u.setStepGoal((random.nextInt(100) + 100) * stepFactor);
+                    int stepGoal = (random.nextInt(100) + 100) * stepFactor;
+                    u.setStepGoal(stepGoal == 0 ? 10000 : stepGoal);
                 }
 
                 System.out.println("\n\nCreated User: " + u);
