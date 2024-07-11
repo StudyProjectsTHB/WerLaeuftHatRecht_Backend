@@ -3,7 +3,7 @@ package com.example.mux.challenge.service;
 import com.example.mux.challenge.model.Challenge;
 import com.example.mux.challenge.model.ChallengeType;
 import com.example.mux.challenge.model.ChallengeTypeEnum;
-import com.example.mux.challenge.model.dto.UserChallengeDTO;
+import com.example.mux.challenge.model.dto.ChallengeDTO;
 import com.example.mux.challenge.repository.ChallengeRepository;
 import com.example.mux.user.model.User;
 import lombok.AllArgsConstructor;
@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Service
@@ -22,17 +19,16 @@ public class ChallengeService {
 
     static Random random = new Random();
 
-    public List<UserChallengeDTO> getUserChallenge(User user, LocalDate date){
-        HashSet<Challenge> challenges = new HashSet<>();
-        challenges.addAll(challengeRepository.findAllByStartDateLessThanEqual(date));
-        challenges.addAll(challengeRepository.findAllByEndDateGreaterThan(date));
+    public List<ChallengeDTO> getUserChallenge(User user, LocalDate date){
+        HashSet<Challenge> challenges = new HashSet<>(challengeRepository.findAllByStartDateLessThanEqual(date));
+        challenges.retainAll(challengeRepository.findAllByEndDateGreaterThanEqual(date));
 
-        ArrayList<UserChallengeDTO> userChallengeDTOs = new ArrayList<>();
+        ArrayList<ChallengeDTO> challengeDTOS = new ArrayList<>();
 
         for(Challenge challenge : challenges)
-            userChallengeDTOs.add(new UserChallengeDTO(challenge, user));
+            challengeDTOS.add(new ChallengeDTO(challenge, user));
 
-        return userChallengeDTOs;
+        return challengeDTOS;
     }
 
     public void createChallenges(LocalDate startDate, LocalDate endDate) {createChallenges(startDate, endDate, 2);}
