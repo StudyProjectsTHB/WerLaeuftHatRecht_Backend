@@ -63,6 +63,7 @@ public class User implements UserDetails {
         this.isAdmin = isAdmin;
         this.email = email;
         setHeight(0);
+        setStepGoal(10000);
     }
 
     public void setPassword(String password){

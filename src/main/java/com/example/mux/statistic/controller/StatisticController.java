@@ -57,7 +57,7 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/groups")
+    @PostMapping("/groups")
     @ResponseBody
     public List<GroupStepsDTO> createGroupStatistics(@RequestBody StatisticDurationDTO statisticDuration){
         return statisticService.createGroupStatistics(statisticDuration);
