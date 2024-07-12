@@ -6,6 +6,7 @@ import com.example.mux.challenge.model.ChallengeTypeEnum;
 import com.example.mux.challenge.model.dto.ChallengeDTO;
 import com.example.mux.challenge.repository.ChallengeRepository;
 import com.example.mux.user.model.User;
+import com.example.mux.user.service.EmailService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +17,12 @@ import java.util.*;
 @Service
 public class ChallengeService {
     private final ChallengeRepository challengeRepository;
+    private final EmailService emailService;
 
     static Random random = new Random();
 
     public List<ChallengeDTO> getUserChallenges(User user, LocalDate date){
+
         HashSet<Challenge> challenges = new HashSet<>(challengeRepository.findAllByStartDateLessThanEqual(date));
         challenges.retainAll(challengeRepository.findAllByEndDateGreaterThanEqual(date));
 
@@ -48,7 +51,6 @@ public class ChallengeService {
     public List<ChallengeDTO> getSuccessfullyUserChallenges(User user){
         List<ChallengeDTO> challengeDTOs = getAllUserChallenges(user);
         challengeDTOs.removeIf(cDTO -> !cDTO.isCompleted());
-
         return challengeDTOs;
     }
 
@@ -122,5 +124,14 @@ public class ChallengeService {
         ChallengeType tempChallengeType = new ChallengeType(prefix, timeUnit, amountUnit, primaryUnit, type);
         return new Challenge(time, amount, startDate, endDate, tempChallengeType);
 
+    }
+
+    public void sendChallengeEmail(List<User> users){
+        LocalDate sunday = LocalDate.now().minusDays(1);
+        for(User user: users){
+            if(user.isEnabled()) {
+                emailService.sendChallengeEmail(user, getUserChallenges(user, sunday));
+            }
+        }
     }
 }
