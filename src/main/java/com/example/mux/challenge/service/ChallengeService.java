@@ -129,8 +129,9 @@ public class ChallengeService {
     public void sendChallengeEmail(List<User> users){
         LocalDate sunday = LocalDate.now().minusDays(1);
         for(User user: users){
-            if(user.isEnabled()) {
-                emailService.sendChallengeEmail(user, getUserChallenges(user, sunday));
+            List<ChallengeDTO> challengeDTOS = getUserChallenges(user, sunday);
+            if(user.isEnabled() && !challengeDTOS.isEmpty()) {
+                emailService.sendChallengeEmail(user, challengeDTOS);
             }
         }
     }

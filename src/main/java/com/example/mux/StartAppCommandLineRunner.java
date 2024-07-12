@@ -39,13 +39,15 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         competitionService.createInitialCompetition();
-        competitionService.updateCompetition(new UpdateCompetitionDTO(LocalDate.now().minusDays(32), LocalDate.now().plusDays(35), false));
         generateUserNames();
         System.out.println("\n\nCompetition Names left: " + AvailableNameService.getNumberOfAvailableNames());
 
         if (checkIfDaysUsersGroupsEmpty()) {
-            createTestData();
-            //createLiveData();
+
+            if (initProperties.getIsScreencast())
+                createLiveData();
+            else
+                createTestData();
 
         }
         System.out.println("\n\nCompetition Names left: " + AvailableNameService.getNumberOfAvailableNames());
@@ -57,7 +59,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
     }
 
     private void createTestData() throws EntityNotFoundException {
-
+        competitionService.updateCompetition(new UpdateCompetitionDTO(LocalDate.now().minusDays(32), LocalDate.now().plusDays(35), false));
         Random random = new Random();
 
         // Create groups
@@ -89,6 +91,56 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
             boolean stepsEveryDay = i == 0 || random.nextFloat() < 0.5;
             HashSet<Day> days = new HashSet<>();
             for (LocalDate date = competitionService.getCompetition().getStartDate(); !date.isAfter(LocalDate.now()); date = date.plusDays(1)) {
+                if (stepsEveryDay || random.nextFloat() < 0.8) {
+                    Day d = new Day(date, (random.nextInt(stepFactor) * random.nextInt(100) + 100 * stepFactor), u);
+                    days.add(d);
+                    System.out.print(d.getSteps() + " ");
+                } else {
+                    System.out.print("0 ");
+                }
+            }
+            User current_u = userService.createAndRegisterIfNotExist(u);
+            dayRepository.saveAll(days);
+            current_u.setDays(days);
+            userRepository.save(current_u);
+
+        }
+
+    }
+
+    private void createLiveData() throws EntityNotFoundException {
+        competitionService.updateCompetition(new UpdateCompetitionDTO(LocalDate.now().minusDays(13), LocalDate.now().plusDays(25), false));
+        Random random = new Random();
+
+        // Create groups
+        List<GroupCreationDTO> groupDTOs = new ArrayList<>();
+        for (String groupName : initProperties.getGroupNames()) {
+            groupDTOs.add(new GroupCreationDTO(groupName, random.nextInt(40) + 10));
+        }
+        List<Group> groups = groupService.createGroups(groupDTOs);
+
+        // Create Users
+        ArrayList<User> users = new ArrayList<>();
+        int numUsers = groups.size() * 10;
+        for (int i = 0; i < numUsers; i++) {
+            users.add(new User("user" + i + "@gericht-brb.xx", (i == 0) || (random.nextFloat() < 0.1)));
+        }
+        for (int i = 0; i < users.size(); i++) {
+            User u = users.get(i);
+            u.setGroup((i < 5) ? groups.get(0) : ((i >= users.size() - 2) ? groups.get(groups.size() - 1) : groups.get(random.nextInt(groups.size() - 1))));
+            u.setPassword("12345678");
+            u.setCompetitionName(AvailableNameService.getAvailableName());
+            int stepFactor = (i==0) ? 150 : random.nextInt(130) + 20;
+            if (random.nextFloat() < 0.5) {
+                int stepGoal = (random.nextInt(100) + 100) * stepFactor;
+                u.setStepGoal(stepGoal == 0 ? 10000 : stepGoal);
+            }
+
+            System.out.println("\n\nCreated User: " + u);
+
+            boolean stepsEveryDay = i == 0 || random.nextFloat() < 0.5;
+            HashSet<Day> days = new HashSet<>();
+            for (LocalDate date = competitionService.getCompetition().getStartDate(); !date.isAfter(competitionService.getCompetition().getStartDate().plusDays(6)); date = date.plusDays(1)) {
                 if (stepsEveryDay || random.nextFloat() < 0.8) {
                     Day d = new Day(date, (random.nextInt(stepFactor) * random.nextInt(100) + 100 * stepFactor), u);
                     days.add(d);
