@@ -56,13 +56,13 @@ public class User implements UserDetails {
     @JoinColumn(name = "group_ID")
     private Group group;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Day> days;
 
     public User(String email, boolean isAdmin){
         this.isAdmin = isAdmin;
         this.email = email;
-        setHeight(0);
+        setHeight(Integer.valueOf(0));
         setStepGoal(10000);
     }
 
@@ -119,4 +119,7 @@ public class User implements UserDetails {
         return String.join("", getAdjective(), " ", getNoun(), " - ", getEmail(), " in Group: ", getGroup().getName(), " with step goal: ", Integer.toString(getStepGoal()), "... PW: ", getPassword(), " | isAdmin: ", Boolean.toString(isAdmin));
     }
 
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 }

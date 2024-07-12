@@ -3,6 +3,7 @@ package com.example.mux.user.service;
 import com.example.mux.day.service.DayService;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
+import com.example.mux.group.service.GroupService;
 import com.example.mux.user.UserProperties;
 import com.example.mux.user.exception.PasswordMismatchException;
 import com.example.mux.user.exception.TokenExpiredException;
@@ -29,28 +30,43 @@ public class UserService {
     private final UserProperties userProperties;
     private final EmailService emailService;
     private final UserTokenService userTokenService;
+    private final GroupService groupService;
 
-    public UserDTO updateUser(int userID, UpdateUserDTO updateUserStepGoal) throws EntityNotFoundException, IllegalArgumentException {
+    public UserDTO updateUser(int userID, UpdateUserDTO updateUser) throws EntityNotFoundException, IllegalArgumentException {
         User user = getUser(userID);
-        if(updateUserStepGoal.getStepGoal() != null) {
-            if (updateUserStepGoal.getStepGoal() < 0) {
+        if(updateUser.getStepGoal() != null) {
+            if (updateUser.getStepGoal() < 0) {
                 throw new IllegalArgumentException("The value should be greater than 0.");
             }
 
-            user.setStepGoal(updateUserStepGoal.getStepGoal());
+            user.setStepGoal(updateUser.getStepGoal());
         }
 
-        if(updateUserStepGoal.getStepSize() != null || updateUserStepGoal.getHeight() != null){
-            if(updateUserStepGoal.getStepSize() != null && updateUserStepGoal.getHeight() != null){
+        if(updateUser.getStepSize() != null || updateUser.getHeight() != null){
+            if(updateUser.getStepSize() != null && updateUser.getHeight() != null){
                 throw new IllegalArgumentException("The users height and step size could not be set simultaneously.");
             }
-            if(updateUserStepGoal.getHeight() != null){
-                user.setHeight(updateUserStepGoal.getHeight());
+            if(updateUser.getHeight() != null){
+                user.setHeight(updateUser.getHeight());
                 user.setStepSize(null);
             }else{
-                user.setStepSize(updateUserStepGoal.getStepSize());
+                user.setStepSize(updateUser.getStepSize());
                 user.setHeight(null);
             }
+        }
+
+        if(updateUser.getIsAdmin() != null){
+            user.setIsAdmin(updateUser.getIsAdmin());
+        }
+
+        if(updateUser.getEmail() != null){
+            user.setEmail(updateUser.getEmail());
+        }
+
+        Integer groupId = updateUser.getGroupId();
+        if(groupId != null){
+            Group group = groupService.getGroup(groupId);
+            user.setGroup(group);
         }
 
         return new UserDTO(userRepository.save(user));

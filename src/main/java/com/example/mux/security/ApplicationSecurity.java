@@ -31,6 +31,7 @@ public class ApplicationSecurity {
                         .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/users/self").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/users/register/**").permitAll()
                         .requestMatchers("/users/password/reset").permitAll()

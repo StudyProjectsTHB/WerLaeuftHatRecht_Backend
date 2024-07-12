@@ -27,6 +27,9 @@ public class Group {
 
     private int numberOfEmployees;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> users = new LinkedList<>();
+
     public Group(String name, int numberOfEmployees){
         this(0, name, numberOfEmployees);
     }

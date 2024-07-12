@@ -11,4 +11,7 @@ public class UpdateUserDTO {
     private Integer stepGoal;
     private Integer height;
     private Integer stepSize;
+    private Integer groupId;
+    private String email;
+    private Boolean isAdmin;
 }

@@ -1,8 +1,9 @@
 package com.example.mux.user.model.dto;
 
-import com.example.mux.day.model.Day;
-import com.example.mux.group.model.Group;
+import com.example.mux.group.model.dto.GroupDTO;
 import com.example.mux.user.model.User;
+import com.example.mux.util.StepsToKilometers;
+import com.example.mux.util.StepsToKilometersWithKilometers;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,13 +14,14 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO {
+public class UserDTO extends StepsToKilometers {
     private String email;
     private boolean isAdmin;
     private String noun;
     private String adjective;
-    private Group group;
+    private GroupDTO group;
     private int stepGoal;
+    private double stepGoalKilometers;
     private int ID;
     private Integer height;
 
@@ -29,12 +31,14 @@ public class UserDTO {
         setEmail(user.getEmail());
         setNoun(user.getNoun());
         setAdjective(user.getAdjective());
-        setGroup(user.getGroup());
+        setGroup(new GroupDTO(user.getGroup()));
         this.isAdmin = user.isAdmin();
         setID(user.getID());
         setStepGoal(user.getStepGoal());
         setHeight(user.getHeight());
         setStepSize(user.getStepSize());
+        setStepGoalKilometers(calculateKilometers(user.getStepGoal(), user.getHeight(), user.getStepSize()));
+
     }
 
     public static List<UserDTO> fromUserList(List<User> users){
