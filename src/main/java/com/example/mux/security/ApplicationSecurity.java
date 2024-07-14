@@ -39,9 +39,9 @@ public class ApplicationSecurity {
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/users/logout").hasAnyRole("ADMIN", "USER")
 
-                        .requestMatchers("/groups/*").hasRole("ADMIN")
+                        .requestMatchers("/groups/*").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/groups/*/users").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/groups").hasRole("ADMIN")
+                        .requestMatchers("/groups").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/days").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/days/**").hasAnyRole("USER", "ADMIN")
