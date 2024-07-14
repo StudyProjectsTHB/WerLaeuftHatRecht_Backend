@@ -26,7 +26,29 @@ public class ChallengeController {
     @GetMapping("/{date}")
     public ResponseEntity<List<ChallengeDTO>> getChallenges(@PathVariable LocalDate date, @AuthenticationPrincipal UserDetails userDetail){
         try {
-            List<ChallengeDTO> userChallenges = challengeService.getUserChallenge(userService.getUser(userDetail.getUsername()),date);
+            List<ChallengeDTO> userChallenges = challengeService.getUserChallenges(userService.getUser(userDetail.getUsername()),date);
+            return ResponseEntity.ok(userChallenges);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    // Gets all (past and future) successful completed challenges of a user sorted by endDate
+    @GetMapping("/successfully")
+    public ResponseEntity<List<ChallengeDTO>> getSuccessfullyChallenges(@AuthenticationPrincipal UserDetails userDetail){
+        try {
+            List<ChallengeDTO> userChallenges = challengeService.getSuccessfullyUserChallenges(userService.getUser(userDetail.getUsername()));
+            return ResponseEntity.ok(userChallenges);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    // Gets all (past and future) challenges of a user sorted by endDate
+    @GetMapping("/")
+    public ResponseEntity<List<ChallengeDTO>> getAllChallenges(@AuthenticationPrincipal UserDetails userDetail){
+        try {
+            List<ChallengeDTO> userChallenges = challengeService.getAllUserChallenges(userService.getUser(userDetail.getUsername()));
             return ResponseEntity.ok(userChallenges);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
