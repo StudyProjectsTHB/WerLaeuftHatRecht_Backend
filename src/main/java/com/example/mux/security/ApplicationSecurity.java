@@ -48,8 +48,8 @@ public class ApplicationSecurity {
 
                         .requestMatchers("/statistics/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/statistics/users").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/statistics/groups/*").hasRole("ADMIN")
-                        .requestMatchers("/statistics/groups").hasRole("ADMIN")
+                        .requestMatchers("/statistics/groups/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/statistics/groups").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/statistics/groups/*/users").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/challenges/**").hasAnyRole("USER", "ADMIN")
