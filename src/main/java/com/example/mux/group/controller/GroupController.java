@@ -3,6 +3,7 @@ package com.example.mux.group.controller;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.group.model.dto.GroupCreationDTO;
+import com.example.mux.group.model.dto.GroupDTO;
 import com.example.mux.group.service.GroupService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/groups")
 @AllArgsConstructor
@@ -20,8 +22,8 @@ public class GroupController {
 
     @PostMapping
     @ResponseBody
-    public List<Group> createGroups(@RequestBody List<GroupCreationDTO> groupCreations){
-        return groupService.createGroups(groupCreations);
+    public List<GroupDTO> createGroups(@RequestBody List<GroupCreationDTO> groupCreations){
+        return GroupDTO.fromGroupList(groupService.createGroups(groupCreations));
     }
 
     @DeleteMapping("/{ID}")
@@ -31,25 +33,25 @@ public class GroupController {
 
     @PutMapping("/{ID}")
     @ResponseBody
-    public ResponseEntity<Group> updateGroup(@PathVariable int ID, @RequestBody GroupCreationDTO groupCreation){
+    public ResponseEntity<GroupDTO> updateGroup(@PathVariable int ID, @RequestBody GroupCreationDTO groupCreation){
         try {
-            return ResponseEntity.ok(groupService.updateGroup(ID, groupCreation));
+            return ResponseEntity.ok(new GroupDTO(groupService.updateGroup(ID, groupCreation)));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @GetMapping("/{ID}")
-    public ResponseEntity<Group> getGroup(@PathVariable int ID){
+    public ResponseEntity<GroupDTO> getGroup(@PathVariable int ID){
         try {
-            return ResponseEntity.ok(groupService.getGroup(ID));
+            return ResponseEntity.ok(new GroupDTO(groupService.getGroup(ID)));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @GetMapping
-    public List<Group> getGroups(){
-        return groupService.getGroups();
+    public List<GroupDTO> getGroups(){
+        return GroupDTO.fromGroupList(groupService.getGroups());
     }
 }

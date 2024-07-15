@@ -13,4 +13,6 @@ import java.util.List;
 public class InitProperties {
     private List<String> email;
     private List<String> groupNames;
+    private Boolean isScreencast;
+
 }

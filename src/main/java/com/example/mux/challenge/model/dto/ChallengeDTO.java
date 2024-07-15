@@ -4,27 +4,30 @@ import com.example.mux.challenge.model.Challenge;
 import com.example.mux.challenge.model.ChallengeTypeEnum;
 import com.example.mux.day.model.Day;
 import com.example.mux.user.model.User;
+import com.example.mux.user.model.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.lang.Math.min;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserChallengeDTO {
+public class ChallengeDTO {
 
     private String challengeString;
     private String progressString;
     private boolean completed;
 
-    private User user;
-
-    public UserChallengeDTO(Challenge challenge, User user) {
+    public ChallengeDTO(Challenge challenge, User user) {
         String challengeString = Stream.of(challenge.getChallengeType().getPrefix(), Integer.toString(challenge.getTime()), challenge.getChallengeType().getTimeUnit(), Integer.toString(challenge.getAmount()), challenge.getChallengeType().getAmountUnit())
                 .filter(s -> s != null && !s.isEmpty() && !s.equals("0"))
                 .collect(Collectors.joining(" "));
@@ -42,12 +45,17 @@ public class UserChallengeDTO {
             goal = challenge.getTime();
             int temp = 0;
             int max_days = 0;
+            LocalDate lastDay = null;
             for (Day day : relevantDays) {
+                if (lastDay == null || !day.getDate().minusDays(1).isEqual(lastDay)) {
+                    temp = 0;
+                }
+                lastDay = day.getDate();
                 if (day.getSteps() >= challenge.getAmount()) {
                     temp++;
-                } else {
                     if (temp > max_days)
                         max_days = temp;
+                } else {
                     temp = 0;
                 }
                 if (temp >= goal) {
@@ -68,21 +76,22 @@ public class UserChallengeDTO {
             }
             currentDone = temp;
         } else if (challenge.getChallengeType().getType() == ChallengeTypeEnum.TOTAL_DAYS) {
-            goal = challenge.getTime();
+            goal = challenge.getAmount();
             relevantDays.sort(Comparator.comparing(Day::getSteps, Comparator.reverseOrder()));
-            relevantDays.removeIf(day -> day.getSteps() < challenge.getAmount());
-            currentDone = relevantDays.size();
+            List<Day> chooseDays = relevantDays.subList(0, min(challenge.getTime(), relevantDays.size()));
+            for (Day day : chooseDays) {
+                currentDone += day.getSteps();
+            }
         } else if (challenge.getChallengeType().getType() == ChallengeTypeEnum.TOTAL_STEPS) {
             goal = challenge.getAmount();
             for (Day day : relevantDays) {
                 currentDone += day.getSteps();
             }
         }
-        String progressString = currentDone + "/" + goal + " " + challenge.getChallengeType().getPrimaryUnit();
+        String progressString = min(currentDone, goal) + "/" + goal + " " + challenge.getChallengeType().getPrimaryUnit();
 
         this.setChallengeString(challengeString);
         this.setProgressString(progressString);
-        this.setUser(user);
         this.setCompleted(currentDone >= goal);
 
     }

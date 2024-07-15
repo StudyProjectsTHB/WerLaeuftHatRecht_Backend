@@ -6,10 +6,10 @@ import com.example.mux.competition.service.CompetitionService;
 import com.example.mux.exception.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/competition")
 @AllArgsConstructor

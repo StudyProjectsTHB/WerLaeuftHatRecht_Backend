@@ -6,6 +6,7 @@ import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.group.service.GroupService;
 import com.example.mux.statistic.model.dto.GroupStepsDTO;
+import com.example.mux.statistic.model.dto.SingleUserStepsDTO;
 import com.example.mux.statistic.model.dto.StatisticDurationDTO;
 import com.example.mux.statistic.model.dto.UserStepsDTO;
 import com.example.mux.user.model.User;
@@ -24,12 +25,18 @@ public class StatisticService {
     private final DayService dayService;
     private final GroupService groupService;
 
-    public UserStepsDTO createUserStatistic(int userID, StatisticDurationDTO statisticDuration) throws EntityNotFoundException {
+    public SingleUserStepsDTO createSingleUserStatistic(int userID, StatisticDurationDTO statisticDuration) throws EntityNotFoundException {
         User user = userService.getUser(userID);
-        return createUserStatistic(user, statisticDuration);
+        return createSingleUserStatistic(user, statisticDuration);
     }
 
-    public UserStepsDTO createUserStatistic(User user, StatisticDurationDTO statisticDuration) {
+    public SingleUserStepsDTO createSingleUserStatistic(User user, StatisticDurationDTO statisticDuration) {
+        List<Day> days = dayService.getDaysBetween(user, statisticDuration.getStartDate(), statisticDuration.getEndDate());
+
+        return new SingleUserStepsDTO(user, dayService.getStepSum(days));
+    }
+
+    private UserStepsDTO createUserStatistic(User user, StatisticDurationDTO statisticDuration) {
         List<Day> days = dayService.getDaysBetween(user, statisticDuration.getStartDate(), statisticDuration.getEndDate());
 
         return new UserStepsDTO(user, dayService.getStepSum(days));
@@ -41,7 +48,9 @@ public class StatisticService {
 
     public List<UserStepsDTO> createGroupUserStatistic(Group group, StatisticDurationDTO statisticDuration){
         List<User> users = userService.getUsers(group);
-        return createUserStatisticsForUsers(users, statisticDuration);
+        List<UserStepsDTO> result = createUserStatisticsForUsers(users, statisticDuration);
+        Collections.sort(result);
+        return result;
     }
 
     private List<UserStepsDTO> createUserStatisticsForUsers(List<User> users, StatisticDurationDTO statisticDuration){

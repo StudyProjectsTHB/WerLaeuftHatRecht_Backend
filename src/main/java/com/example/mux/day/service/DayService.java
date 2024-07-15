@@ -105,9 +105,9 @@ public class DayService {
         List<Day> resultDays = null;
         if (startDate == null && endDate == null) {
             resultDays = dayRepository.findAllByUser(user);
-        } else if (startDate != null) {
+        } else if (startDate != null && endDate == null) {
             resultDays = dayRepository.findAllByUserAndDateGreaterThanEqual(user, startDate);
-        } else if (endDate != null) {
+        } else if (endDate != null && startDate == null) {
             resultDays = dayRepository.findAllByUserAndDateLessThanEqual(user, endDate);
         } else {
             resultDays = dayRepository.findAllByUserAndDateBetween(user, startDate, endDate);
@@ -119,9 +119,9 @@ public class DayService {
         List<Day> resultDays = null;
         if (startDate == null && endDate == null) {
             resultDays = dayRepository.findAllByUser_Group(group);
-        } else if (startDate != null) {
+        } else if (startDate != null && endDate == null) {
             resultDays = dayRepository.findAllByUser_GroupAndDateGreaterThanEqual(group, startDate);
-        } else if (endDate != null) {
+        } else if (endDate != null && startDate == null) {
             resultDays = dayRepository.findAllByUser_GroupAndDateLessThanEqual(group, endDate);
         } else {
             resultDays = dayRepository.findAllByUser_GroupAndDateBetween(group, startDate, endDate);

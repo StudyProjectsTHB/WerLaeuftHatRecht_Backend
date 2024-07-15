@@ -6,17 +6,19 @@ import com.example.mux.user.exception.TokenExpiredException;
 import com.example.mux.user.exception.TokenNotFoundException;
 import com.example.mux.user.model.dto.*;
 import com.example.mux.user.service.AuthenticationService;
-import com.example.mux.user.service.JWTManagerService;
 import com.example.mux.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
@@ -63,8 +65,17 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> getUsers(){
-        List<UserDTO> users = UserDTO.fromUserList(userService.getUsers());;
+        List<UserDTO> users = UserDTO.fromUserList(userService.getUsers());
         return users;
+    }
+
+    @GetMapping("/self")
+    public ResponseEntity<UserDTO> getOwnUser(@AuthenticationPrincipal UserDetails userDetail){
+        try {
+            return ResponseEntity.ok(new UserDTO(userService.getUser(userDetail.getUsername())));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/{ID}")
@@ -74,12 +85,38 @@ public class UserController {
 
     @PutMapping("/{ID}")
     @ResponseBody
-    public ResponseEntity<UserDTO> updateUserStepGoal(@PathVariable int ID, @RequestBody UpdateUserStepGoalDTO updateUserStepGoal){
+    public ResponseEntity<UserDTO> updateUser(@PathVariable int ID, @RequestBody UpdateUserDTO updateUser){
         try {
-            return ResponseEntity.ok(userService.updateUserStepGoal(ID, updateUserStepGoal));
+            return ResponseEntity.ok(userService.updateUser(ID, updateUser));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PostMapping("/password/reset")
+    @ResponseBody
+    public ResponseEntity startPasswordReset(@RequestBody EmailDTO emailDTO) {
+        try {
+            userService.startPasswordResetProcess(emailDTO);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PutMapping("/password/reset/{token}")
+    @ResponseBody
+    public ResponseEntity startPasswordReset(@RequestBody UserPasswordsDTO userPasswords, @PathVariable String token) {
+        try {
+            userService.resetPassword(userPasswords, token);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (TokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (PasswordMismatchException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
