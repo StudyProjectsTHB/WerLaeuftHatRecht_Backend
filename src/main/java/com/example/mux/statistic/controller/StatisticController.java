@@ -21,7 +21,7 @@ import java.util.List;
 public class StatisticController {
     private final StatisticService statisticService;
 
-    @GetMapping("/users/{ID}")
+    @PostMapping("/users/{ID}")
     @ResponseBody
     public ResponseEntity<SingleUserStepsDTO> createUserStatistic(@PathVariable int ID, @RequestBody StatisticDurationDTO statisticDuration){
         try {
@@ -31,13 +31,13 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/users")
+    @PostMapping("/users")
     @ResponseBody
     public List<UserStepsDTO> createUserStatistics(@RequestBody StatisticDurationDTO statisticDuration){
         return statisticService.createUserStatistics(statisticDuration);
     }
 
-    @GetMapping("/groups/{ID}")
+    @PostMapping("/groups/{ID}")
     @ResponseBody
     public ResponseEntity<GroupStepsDTO> createGroupStatistic(@PathVariable int ID, @RequestBody StatisticDurationDTO statisticDuration){
         try {
@@ -47,7 +47,7 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/groups/{ID}/users")
+    @PostMapping("/groups/{ID}/users")
     @ResponseBody
     public ResponseEntity<List<UserStepsDTO>> createGroupUserStatistic(@PathVariable int ID, @RequestBody StatisticDurationDTO statisticDuration){
         try {
@@ -57,7 +57,7 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/groups")
+    @PostMapping("/groups")
     @ResponseBody
     public List<GroupStepsDTO> createGroupStatistics(@RequestBody StatisticDurationDTO statisticDuration){
         return statisticService.createGroupStatistics(statisticDuration);

@@ -1,7 +1,7 @@
 package com.example.mux.statistic.model.dto;
 
 import com.example.mux.user.model.User;
-import com.example.mux.util.StepsToKilometers;
+import com.example.mux.util.StepsToKilometersWithKilometers;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,16 +9,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SingleUserStepsDTO extends StepsToKilometers {
+public class SingleUserStepsDTO extends StepsToKilometersWithKilometers {
     private String noun;
     private String adjective;
-    int steps;
+    private int steps;
+    private double stepGoalKilometers;
+
 
     public SingleUserStepsDTO(User user, int steps){
         setSteps(steps);
         setNoun(user.getNoun());
         setAdjective(user.getAdjective());
-        calculateKilometers(steps, user.getHeight(), user.getStepSize());
+        calculateAndSetKilometers(steps, user.getHeight(), user.getStepSize());
+        setStepGoalKilometers(calculateKilometers(user.getStepGoal(), user.getHeight(), user.getStepSize()));
     }
 
 }

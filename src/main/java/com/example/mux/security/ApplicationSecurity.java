@@ -31,6 +31,7 @@ public class ApplicationSecurity {
                         .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/users/self").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/users/register/**").permitAll()
                         .requestMatchers("/users/password/reset").permitAll()
@@ -38,21 +39,22 @@ public class ApplicationSecurity {
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/users/logout").hasAnyRole("ADMIN", "USER")
 
-                        .requestMatchers("/groups/*").hasRole("ADMIN")
+                        .requestMatchers("/groups/*").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/groups/*/users").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/groups").hasRole("ADMIN")
+                        .requestMatchers("/groups").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/days").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/days/**").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/statistics/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/statistics/users").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/statistics/groups/**").hasRole("ADMIN")
-                        .requestMatchers("/statistics/groups").hasRole("ADMIN")
+                        .requestMatchers("/statistics/groups/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/statistics/groups").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/statistics/groups/*/users").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/challenges/**").hasAnyRole("USER", "ADMIN")
 
-                        .requestMatchers("/competition").hasRole("ADMIN")
+                        .requestMatchers("/competition").hasAnyRole("USER", "ADMIN")
                         .anyRequest().permitAll())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
