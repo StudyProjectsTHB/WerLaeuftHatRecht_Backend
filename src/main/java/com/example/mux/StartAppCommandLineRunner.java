@@ -73,7 +73,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
         ArrayList<User> users = new ArrayList<>();
         int numUsers = groups.size() * 10;
         for (int i = 0; i < numUsers; i++) {
-            users.add(new User("user" + i + "@gericht-brb.xx", (i == 0) || (random.nextFloat() < 0.1)));
+            users.add(new User("user" + i + "@gericht-brb.dummy", (i == 0) || (random.nextFloat() < 0.1)));
         }
         for (int i = 0; i < users.size(); i++) {
             User u = users.get(i);
@@ -123,7 +123,7 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
         ArrayList<User> users = new ArrayList<>();
         int numUsers = groups.size() * 10;
         for (int i = 0; i < numUsers; i++) {
-            users.add(new User("user" + i + "@gericht-brb.xx", (i == 0) || (random.nextFloat() < 0.1)));
+            users.add(new User("user" + i + "@gericht-brb.dummy", (i == 0) || (random.nextFloat() < 0.1)));
         }
         for (int i = 0; i < users.size(); i++) {
             User u = users.get(i);
