@@ -121,13 +121,13 @@ public class StartAppCommandLineRunner implements CommandLineRunner {
 
         // Create Users
         ArrayList<User> users = new ArrayList<>();
-        int numUsers = groups.size() * 5;
+        int numUsers = groups.size() * 10;
         for (int i = 0; i < numUsers; i++) {
-            users.add(new User("user" + i + "@gericht-brb.dummy", (i == 0) || (random.nextFloat() < 0.1)));
+            users.add(new User("user" + i + "@gericht-brb.dummy", (i == 0) || (i != 1 && random.nextFloat() < 0.1)));
         }
         for (int i = 0; i < users.size(); i++) {
             User u = users.get(i);
-            u.setGroup((i < 5) ? groups.get(0) : ((i >= users.size() - 2) ? groups.get(groups.size() - 1) : groups.get(random.nextInt(groups.size() - 1))));
+            u.setGroup((i < 3) ? groups.get(0) : ((i >= users.size() - 2) ? groups.get(groups.size() - 1) : groups.get(random.nextInt(groups.size() - 1))));
             u.setPassword("12345678");
             u.setCompetitionName(AvailableNameService.getAvailableName());
             int stepFactor = (i==0) ? 100 : random.nextInt(80) + 20;
