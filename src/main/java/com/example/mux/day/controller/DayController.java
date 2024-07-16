@@ -1,7 +1,6 @@
 package com.example.mux.day.controller;
 
 import com.example.mux.day.model.dto.DayDTO;
-import com.example.mux.day.model.dto.DayDurationDTO;
 import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.model.dto.DurationStepsDTO;
 import com.example.mux.day.service.DayService;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -41,9 +41,10 @@ public class DayController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteDays(@RequestBody DayDurationDTO dayDuration, @AuthenticationPrincipal UserDetails userDetail){
+    @Transactional
+    public ResponseEntity<?> deleteDays(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate, @AuthenticationPrincipal UserDetails userDetail){
         try {
-            dayService.deleteDays(dayDuration, userService.getUser(userDetail.getUsername()));
+            dayService.deleteDays(startDate, endDate, userService.getUser(userDetail.getUsername()));
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
