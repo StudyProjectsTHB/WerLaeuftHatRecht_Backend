@@ -35,9 +35,8 @@ public class DayService {
         }
     }
 
-    @Transactional
     public void deleteDays(LocalDate startDate, LocalDate endDate, User user){
-        dayRepository.deleteByUserAndDateBetween(user, startDate, endDate);
+        dayRepository.findAllByUserAndDateBetween(user, startDate, endDate);
     }
 
     public Day updateDay(LocalDate date, User user, StepsDTO daySteps) throws EntityNotFoundException, CompetitionNotStartedException {

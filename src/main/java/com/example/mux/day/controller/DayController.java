@@ -7,6 +7,7 @@ import com.example.mux.day.service.DayService;
 import com.example.mux.exception.CompetitionNotStartedException;
 import com.example.mux.exception.DaysNotInCompetitionException;
 import com.example.mux.exception.EntityNotFoundException;
+import com.example.mux.user.model.User;
 import com.example.mux.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,9 @@ public class DayController {
     @DeleteMapping("/{date}")
     public ResponseEntity<?> deleteDay(@PathVariable LocalDate date, @AuthenticationPrincipal UserDetails userDetail) {
         try {
-            dayService.deleteDay(date, userService.getUser(userDetail.getUsername()));
+            User user = userService.getUser(userDetail.getUsername());
+            userService.deleteDaysFromUser(user, dayService.getDaysBetween(user, date, date));
+            dayService.deleteDay(date, user);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -41,10 +44,11 @@ public class DayController {
     }
 
     @DeleteMapping
-    @Transactional
     public ResponseEntity<?> deleteDays(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate, @AuthenticationPrincipal UserDetails userDetail){
         try {
-            dayService.deleteDays(startDate, endDate, userService.getUser(userDetail.getUsername()));
+            User user = userService.getUser(userDetail.getUsername());
+            userService.deleteDaysFromUser(user, dayService.getDaysBetween(user, startDate, endDate));
+            dayService.deleteDays(startDate, endDate, user);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

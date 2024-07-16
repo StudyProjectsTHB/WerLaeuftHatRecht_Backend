@@ -1,5 +1,6 @@
 package com.example.mux.user.service;
 
+import com.example.mux.day.model.Day;
 import com.example.mux.day.service.DayService;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
@@ -31,6 +32,11 @@ public class UserService {
     private final EmailService emailService;
     private final UserTokenService userTokenService;
     private final GroupService groupService;
+
+    public void deleteDaysFromUser(User user, List<Day> days) {
+        days.forEach(user.getDays()::remove);
+        userRepository.save(user);
+    }
 
     public UserDTO updateUser(int userID, UpdateUserDTO updateUser) throws EntityNotFoundException, IllegalArgumentException {
         User user = getUser(userID);
