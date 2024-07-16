@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public interface DayRepository extends JpaRepository<Day, Integer> {
     void deleteByDateAndUser(LocalDate date, User user);
+    void deleteByUserAndDateBetween(User user, LocalDate startDate, LocalDate endDate);
     Optional<Day> findByDateAndUser(LocalDate date, User user);
     List<Day> findAllByUser(User user);
     List<Day> findAllByUser_Group(Group group);

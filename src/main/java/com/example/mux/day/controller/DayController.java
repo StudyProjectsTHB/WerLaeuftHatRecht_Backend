@@ -1,6 +1,7 @@
 package com.example.mux.day.controller;
 
 import com.example.mux.day.model.dto.DayDTO;
+import com.example.mux.day.model.dto.DayDurationDTO;
 import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.model.dto.DurationStepsDTO;
 import com.example.mux.day.service.DayService;
@@ -28,7 +29,7 @@ public class DayController {
     private final DayService dayService;
 
     @DeleteMapping("/{date}")
-    public ResponseEntity<?> deleteUser(@PathVariable LocalDate date, @AuthenticationPrincipal UserDetails userDetail) {
+    public ResponseEntity<?> deleteDay(@PathVariable LocalDate date, @AuthenticationPrincipal UserDetails userDetail) {
         try {
             dayService.deleteDay(date, userService.getUser(userDetail.getUsername()));
             return ResponseEntity.ok().build();
@@ -36,6 +37,16 @@ public class DayController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }catch (CompetitionNotStartedException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteDays(@RequestBody DayDurationDTO dayDuration, @AuthenticationPrincipal UserDetails userDetail){
+        try {
+            dayService.deleteDays(dayDuration, userService.getUser(userDetail.getUsername()));
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
