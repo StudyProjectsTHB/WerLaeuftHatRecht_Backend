@@ -3,6 +3,7 @@ package com.example.mux.day.service;
 import com.example.mux.competition.model.Competition;
 import com.example.mux.competition.service.CompetitionService;
 import com.example.mux.day.model.Day;
+import com.example.mux.day.model.dto.DayDurationDTO;
 import com.example.mux.day.model.dto.StepsDTO;
 import com.example.mux.day.model.dto.DurationStepsDTO;
 import com.example.mux.day.repository.DayRepository;
@@ -34,6 +35,11 @@ public class DayService {
         } else {
             throw new CompetitionNotStartedException();
         }
+    }
+
+    @Transactional
+    public void deleteDays(DayDurationDTO dayDuration, User user){
+        dayRepository.deleteByUserAndDateBetween(user, dayDuration.getStartDate(), dayDuration.getEndDate());
     }
 
     public Day updateDay(LocalDate date, User user, StepsDTO daySteps) throws EntityNotFoundException, CompetitionNotStartedException {
