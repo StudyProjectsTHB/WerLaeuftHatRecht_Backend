@@ -71,8 +71,23 @@ public class WeatherService {
             weatherCounts.put(mainWeather, weatherCounts.getOrDefault(mainWeather, 0L) + 1);
 
             // Finde die Höchsttemperatur des Tages
-            Map<String, Double> main = (Map<String, Double>) forecast.get("main");
-            double tempMax = main.get("temp_max");
+//            Map<String, Double> main = (Map<String, Double>) forecast.get("main");
+
+            Object mainObject = forecast.get("main");
+
+            Map<String, Object> main = (Map<String, Object>) mainObject;
+
+            double tempMax = 0;
+            if (main.get("temp_max") instanceof Integer) {
+                tempMax = ((Integer) main.get("temp_max")).doubleValue();
+            } else if (main.get("temp_max") instanceof Double) {
+                tempMax = (Double) main.get("temp_max");
+            } else if (main.get("temp_max") instanceof Long) {
+                tempMax = ((Long) main.get("temp_max")).doubleValue();
+            } else if (main.get("temp_max") instanceof Float) {
+                tempMax = ((Float) main.get("temp_max")).doubleValue();
+            }
+
             if (tempMax > maxTemp) {
                 maxTemp = tempMax;
             }
