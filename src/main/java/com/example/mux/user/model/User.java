@@ -1,6 +1,5 @@
 package com.example.mux.user.model;
 
-import com.example.mux.challenge.model.Challenge;
 import com.example.mux.day.model.Day;
 import com.example.mux.group.model.Group;
 import jakarta.persistence.*;
@@ -121,5 +120,9 @@ public class User implements UserDetails {
 
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public void addDays(Collection<Day> days) {
+        this.days.addAll(days);
     }
 }

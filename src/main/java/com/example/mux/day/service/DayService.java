@@ -10,21 +10,21 @@ import com.example.mux.exception.DaysNotInCompetitionException;
 import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.user.model.User;
+import com.example.mux.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
 public class DayService {
     private final DayRepository dayRepository;
     private final CompetitionService competitionService;
+    private final UserRepository userRepository;
 
     @Transactional
     public void deleteDay(LocalDate date, User user) throws CompetitionNotStartedException {
@@ -101,6 +101,9 @@ public class DayService {
 
             days.add(day);
         }
+        Collection<Day> savedDays = dayRepository.saveAll(days);
+        user.addDays(days);
+        userRepository.save(user);
         return dayRepository.saveAll(days);
     }
 
