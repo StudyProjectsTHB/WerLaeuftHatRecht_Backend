@@ -5,7 +5,6 @@ import com.example.mux.competition.model.Competition;
 import com.example.mux.competition.model.dto.UpdateCompetitionDTO;
 import com.example.mux.competition.repository.CompetitionRepository;
 import com.example.mux.day.repository.DayRepository;
-import com.example.mux.day.service.DayService;
 import com.example.mux.exception.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

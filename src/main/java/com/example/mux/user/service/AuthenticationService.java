@@ -21,10 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor

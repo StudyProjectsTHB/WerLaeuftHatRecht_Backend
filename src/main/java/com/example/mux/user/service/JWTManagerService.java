@@ -2,13 +2,8 @@ package com.example.mux.user.service;
 
 import com.example.mux.user.UserProperties;
 import com.example.mux.user.model.User;
-import com.example.mux.user.model.dto.AuthenticationRequestDTO;
-import com.example.mux.user.model.dto.AuthenticationResponseDTO;
 import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,7 +20,7 @@ public class JWTManagerService {
                 .setSubject(user.getUsername())
                 .setIssuer("CodeJava")
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + userProperties.getExpiresAfter() * 60 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + (long) userProperties.getExpiresAfter() * 60 * 60 * 1000))
                 .signWith(SignatureAlgorithm.HS256, userProperties.getSecretKey())
                 .compact();
     }

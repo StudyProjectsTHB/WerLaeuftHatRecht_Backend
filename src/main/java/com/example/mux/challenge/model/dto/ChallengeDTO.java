@@ -4,7 +4,6 @@ import com.example.mux.challenge.model.Challenge;
 import com.example.mux.challenge.model.ChallengeTypeEnum;
 import com.example.mux.day.model.Day;
 import com.example.mux.user.model.User;
-import com.example.mux.user.model.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

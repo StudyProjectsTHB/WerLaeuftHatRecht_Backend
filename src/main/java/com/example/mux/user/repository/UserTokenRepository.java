@@ -1,6 +1,5 @@
 package com.example.mux.user.repository;
 
-import com.example.mux.user.model.User;
 import com.example.mux.user.model.UserToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -4,7 +4,6 @@ import com.example.mux.day.model.Day;
 import com.example.mux.group.model.Group;
 import com.example.mux.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;

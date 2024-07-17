@@ -1,8 +1,6 @@
 package com.example.mux.group.model.dto;
 
 import com.example.mux.group.model.Group;
-import com.example.mux.user.model.User;
-import com.example.mux.user.model.dto.UserDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

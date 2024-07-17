@@ -3,7 +3,6 @@ package com.example.mux.user.model.dto;
 import com.example.mux.group.model.dto.GroupDTO;
 import com.example.mux.user.model.User;
 import com.example.mux.util.StepsToKilometers;
-import com.example.mux.util.StepsToKilometersWithKilometers;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

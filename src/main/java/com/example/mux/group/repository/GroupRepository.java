@@ -1,7 +1,6 @@
 package com.example.mux.group.repository;
 
 import com.example.mux.group.model.Group;
-import com.example.mux.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

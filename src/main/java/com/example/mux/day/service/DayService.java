@@ -101,7 +101,7 @@ public class DayService {
 
             days.add(day);
         }
-        Collection<Day> savedDays = dayRepository.saveAll(days);
+        dayRepository.saveAll(days);
         user.addDays(days);
         userRepository.save(user);
         return dayRepository.saveAll(days);

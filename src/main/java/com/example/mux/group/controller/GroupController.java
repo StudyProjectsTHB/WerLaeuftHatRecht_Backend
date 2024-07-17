@@ -1,7 +1,6 @@
 package com.example.mux.group.controller;
 
 import com.example.mux.exception.EntityNotFoundException;
-import com.example.mux.group.model.Group;
 import com.example.mux.group.model.dto.GroupCreationDTO;
 import com.example.mux.group.model.dto.GroupDTO;
 import com.example.mux.group.service.GroupService;

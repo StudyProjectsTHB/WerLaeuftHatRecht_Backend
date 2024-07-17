@@ -6,7 +6,6 @@ import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.user.model.User;
 import com.example.mux.user.repository.UserRepository;
 import com.example.mux.user.service.JWTManagerService;
-import com.example.mux.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,11 +54,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private boolean hasAuthorizationBearer(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
-            return false;
-        }
-
-        return true;
+        return !ObjectUtils.isEmpty(header) && header.startsWith("Bearer");
     }
 
     private String getAccessToken(HttpServletRequest request) {

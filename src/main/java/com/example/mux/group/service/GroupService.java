@@ -4,7 +4,6 @@ import com.example.mux.exception.EntityNotFoundException;
 import com.example.mux.group.model.Group;
 import com.example.mux.group.model.dto.GroupCreationDTO;
 import com.example.mux.group.repository.GroupRepository;
-import com.example.mux.user.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

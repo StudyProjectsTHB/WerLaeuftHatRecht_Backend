@@ -1,8 +1,6 @@
 package com.example.mux.statistic.model.dto;
 
 import com.example.mux.user.model.User;
-import com.example.mux.user.model.dto.UserDTO;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

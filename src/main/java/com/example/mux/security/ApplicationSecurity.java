@@ -1,7 +1,6 @@
 package com.example.mux.security;
 
 import com.example.mux.user.repository.UserRepository;
-import com.example.mux.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
