@@ -34,11 +34,11 @@ Backend der responsiven Web-App für den Schrittzähler-Wettbewerb der Justiz Br
 
 ## Zugangsdaten
 ### Für eine/n Gesundheitsmanager/in:
-- **E-Mail**: user0@gericht-brb.dummy
+- **E-Mail**: user0@gericht.brandenburg.dummy
 - **Passwort**: 12345678
 
 ### Für eine/n Standardnutzer/in:
-- **E-Mail**: user1@gericht-brb.dummy
+- **E-Mail**: user1@gericht.brandenburg.dummy
 - **Passwort**: 12345678
 
 ## Das Frontend Repository
