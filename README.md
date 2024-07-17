@@ -23,6 +23,11 @@ Backend der responsiven Web-App für den Schrittzähler-Wettbewerb der Justiz Br
 - Festlegung individueller Schrittziele
 - E-Mail-Benachrichtigung über wöchentliche Herausforderungen
 
+## Das Team
+- Camillo Dobrovsky
+- Laurin Jonientz
+- Fanny Wolff
+- Leon Schönberg
 
 ## Die Anwendung
 - [Wer läuft hat Recht](https://mux.ein-toast.de)
