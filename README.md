@@ -13,7 +13,7 @@
 - **Passwort**: 12345678
 
 ## Das Frontend Repository
-- [Frontend Repository](https://github.com/StudyProjectsTHB/WerLaeuftHatRecht_Frontend)
+- [Frontend Repository](github.com/StudyProjectsTHB/WerLaeuftHatRecht_Frontend)
 
 ## Die Figma Links
 ### Für das Desktopdesign:
