@@ -12,7 +12,7 @@ Backend der responsiven Web-App für den Schrittzähler-Wettbewerb der Justiz Br
 - Einsehen der Ergebnisse (gruppiert nach allen Teilnehmern eines Gerichts und Gerichtsrangliste)
 - Export der Ranglisten
 
-### Für andere Nutzer:
+### Für Nutzer/innen::
 - Einfache und flexible Eingabe von Schrittzahlen (Zeitraum festlegen, Standard: heutiger Tag)
 - Bearbeitung von Schrittzahlen für bereits erfasste Tage
 - Übersichtliches Dashboard mit persönlichen Statistiken
