@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -58,11 +59,15 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Day> days;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserToken> tokens;
+
     public User(String email, boolean isAdmin){
         this.isAdmin = isAdmin;
         this.email = email;
         setHeight(Integer.valueOf(0));
         setStepGoal(10000);
+        tokens = new HashSet<>();
     }
 
     public void setPassword(String password){
